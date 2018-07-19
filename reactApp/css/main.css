@@ -1,0 +1,189 @@
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+}
+
+h1 {
+  margin-left: 25px;
+}
+
+.times-font {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.kavivanar-font {
+  font-family: 'Kavivanar', cursive;
+}
+
+.crimsontext-font {
+  font-family: 'Crimson Text', cursive;
+}
+
+.bungeeinline-font {
+  font-family: 'Bungee Inline', cursive;
+}
+
+.red-font {
+  color: red;
+}
+
+.orange-font {
+  color: orange;
+}
+
+.yellow-font {
+  color: yellow;
+}
+
+.green-font {
+  color: green;
+}
+
+.blue-font {
+  color: blue;
+}
+
+.purple-font {
+  color: purple;
+}
+
+.black-font {
+  color: black;
+}
+
+.size12 {
+  font-size: x-small;
+}
+
+.size24 {
+  font-size: small;
+}
+
+.size36 {
+  font-size: medium;
+}
+
+.size48 {
+  font-size: large;
+}
+
+.size60 {
+  font-size: x-large;
+}
+
+.size72 {
+  font-size: xx-large;
+}
+
+.orange-background {
+  background-color: orange;
+}
+
+.yellow-background {
+  background-color: yellow;
+}
+
+.green-background {
+  background-color: green;
+}
+
+.blue-backgroundt {
+  background-color: blue;
+}
+
+.purple-background {
+  background-color: purple;
+}
+
+.white-background {
+  background-color: white;
+}
+
+.toolbar {
+  border-bottom: 2px solid orange;
+  padding: 10px;
+}
+
+.color-popover {
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.document-container {
+  display: block;
+  min-height: 25vh;
+  max-height: 25vh;
+  border: 1px solid black;
+  padding: 10px;
+  overflow-y: scroll;
+  text-align: left;
+}
+
+.document-list {
+  max-height: inherit;
+  box-sizing: border-box;
+  text-align: left;
+  overflow-y: scroll;
+}
+
+.create-or-share-document-div {
+  display: flex;
+}
+
+.toolbar > * {
+  margin-right: 5px;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.page-container {
+  padding: 4vh 20vw;
+  margin: 0;
+  text-align: center;
+  border: 2px solid red;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.document-header {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.back-to-documents-button {
+  border: .5px solid black;
+  background-color: lightgray;
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  height: 3vh;
+  border: .5px solid black;
+  background-color: lightgray;
+  margin-top: 3vh;
+  margin-right: 20px;
+}
+
+.document-id {
+  margin-left: 20px;
+}
+
+.editor-container {
+  border: 2px solid black;
+  height: 60vh;
+  overflow-y: scroll;
+  padding: 20px;
+}
