@@ -1,14 +1,14 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { MemoryRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import App from './Components/App';
+import ElectronApp from './components/ElectronApp';
 
 ReactDOM.render(
   <MemoryRouter>
     <MuiThemeProvider>
-      <App />
+      <ElectronApp />
     </MuiThemeProvider>
   </MemoryRouter>,
   document.getElementById('root')
