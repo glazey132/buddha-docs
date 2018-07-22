@@ -1,4 +1,4 @@
-var React = require('react');
+const React = require('react');
 import {
   Editor,
   EditorState,
@@ -9,7 +9,7 @@ import {
   SelectionState,
   Modifier
 } from 'draft-js';
-var { Link } = require('react-router-dom');
+const { Link } = require('react-router-dom');
 import * as colors from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -313,7 +313,7 @@ class DocumentEditor extends React.Component {
   componentDidMount() {
     console.log('compdidmount here is this.props ', this.props);
     this.props.socket.on('aftercolor', obj => {
-      var selectionState = SelectionState.createEmpty();
+      let selectionState = SelectionState.createEmpty();
       selectionState = selectionState.merge({
         anchorOffset: obj.anchorOffset,
         focusOffset: obj.focusOffset,
