@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-class ElectronApp extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -17,4 +17,4 @@ class ElectronApp extends React.Component {
   }
 }
 
-export default ElectronApp;
+export default App;
