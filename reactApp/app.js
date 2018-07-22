@@ -1,15 +1,10 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
-import Login from './Components/Login';
-import Register from './Components/Register';
-var { DocumentContainer } = require('./Components/Document');
-import DocumentPortal from './Components/DocumentPortal';
+import { MemoryRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-
 require('./css/main.css');
-class App extends React.Component{
+class App extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -19,11 +14,11 @@ class App extends React.Component{
       <BrowserRouter>
         <div>
           <Switch>
-            <Route path='/' exact component={Login} />
-            <Route path='/login' exact component={Login} />
-            <Route path='/register' exact component={Register} />
-            <Route path='/editDocument/:docid' component={DocumentContainer} />
-            <Route path='/userDocs/:userid' component={DocumentPortal} />
+            <Route path="/" exact component={Login} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/register" exact component={Register} />
+            <Route path="/editDocument/:docid" component={DocumentContainer} />
+            <Route path="/userDocs/:userid" component={DocumentPortal} />
           </Switch>
         </div>
       </BrowserRouter>
@@ -32,7 +27,8 @@ class App extends React.Component{
 }
 
 ReactDOM.render(
-    <MuiThemeProvider>
-      <App />
-    </MuiThemeProvider>,
-    document.getElementById('root'));
+  <MuiThemeProvider>
+    <App />
+  </MuiThemeProvider>,
+  document.getElementById('root')
+);
