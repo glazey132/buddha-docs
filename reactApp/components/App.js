@@ -9,7 +9,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <div className="homescreen">
+        <div className="home-page">
           <h1>App home</h1>
         </div>
       </div>
