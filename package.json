@@ -4,8 +4,7 @@
   "description": "A minimal Electron application with React and Express",
   "main": "main.js",
   "scripts": {
-    "dev":
-      "concurrently -k \"npm run devWebpack\" \"npm run devApp\" \"npm run devServer\"",
+    "dev": "concurrently -k \"npm run devWebpack\" \"npm run devApp\" \"npm run devServer\"",
     "devWebpack": "webpack-dev-server --content-base build/",
     "devApp": "electron main.js --dev",
     "devServer": "nodemon --watch backend backend/server.js",
@@ -50,6 +49,7 @@
     "react": "^15.6.1",
     "react-color": "^2.13.8",
     "react-dom": "^15.6.1",
+    "react-materialize": "^2.3.3",
     "react-router-dom": "^4.2.2",
     "socket.io": "^2.1.1"
   }
