@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Row, Input } from 'react-materialize';
+import { Button, Row, Input, Icon } from 'react-materialize';
 
 const Home = props => {
   return (
