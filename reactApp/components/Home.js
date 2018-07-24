@@ -4,8 +4,10 @@ import { Button, Row, Input, Icon } from 'react-materialize';
 
 const Home = props => {
   return (
-    <div>
-      <h3>Welcome home</h3>
+    <div className="home-page">
+      <div>
+        <h2>Welcome home</h2>
+      </div>
     </div>
   );
 };
