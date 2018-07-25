@@ -14,7 +14,8 @@ class Home extends React.Component {
   render() {
     return (
       <div className="home-page">
-        <div>
+        <div className="color-overlay" />
+        <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
           <h2 className={'home-welcome'}>Welcome home</h2>
           <Row>
             <Input name="username" type="text" label="username" />
