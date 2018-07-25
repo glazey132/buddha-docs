@@ -5,6 +5,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import App from './components/App';
 
+require('../css/Draft.css');
+
 ReactDOM.render(
   <MemoryRouter>
     <MuiThemeProvider>

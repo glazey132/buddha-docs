@@ -15,7 +15,7 @@ class Home extends React.Component {
     return (
       <div className="home-page">
         <div>
-          <h2>Welcome home</h2>
+          <h2 className={'home-welcome'}>Welcome home</h2>
           <Row>
             <Input name="username" type="text" label="username" />
             <Input name="password" type="password" label="password" />
