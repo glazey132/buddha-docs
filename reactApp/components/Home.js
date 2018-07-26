@@ -39,16 +39,18 @@ class Home extends React.Component {
   componentWillMount() {
     console.log('here is this.state ', this.state);
     const userId = this.props.match.params.userid;
-    axios.get('http://localhost:3000/getDocuments/' + userId).then(resp => {
-      console.log('the response is here ', resp);
-      resp.data.docs.forEach(doc => {
-        if (doc.author === userId) {
-          this.setState({
-            docs: [...this.state.docs, doc]
-          });
-        }
+    axios
+      .get(localStorage.getItem('url') + '/getDocuments/' + userId)
+      .then(resp => {
+        console.log('the response is here ', resp);
+        resp.data.docs.forEach(doc => {
+          if (doc.author === userId) {
+            this.setState({
+              docs: [...this.state.docs, doc]
+            });
+          }
+        });
       });
-    });
     console.log('here is the this.state after all ', this.state);
   }
 
