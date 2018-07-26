@@ -9,6 +9,18 @@ class Home extends React.Component {
       username: '',
       password: ''
     };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+    console.log('this state after change ', this.state);
   }
 
   render() {
@@ -16,11 +28,25 @@ class Home extends React.Component {
       <div className="home-page">
         <div className="color-overlay" />
         <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
-          <h2 className={'home-welcome'}>Welcome home</h2>
+          <h2 className={'home-welcome'}>Buddha Docs</h2>
           <Row>
-            <Input name="username" type="text" label="username" />
-            <Input name="password" type="password" label="password" />
-            <Button>Login</Button>
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.username}
+              name="username"
+              type="text"
+              label="username"
+              s={12}
+            />
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.password}
+              name="password"
+              type="password"
+              label="password"
+              s={12}
+            />
+            <Button className="login-button">Login</Button>
           </Row>
         </div>
       </div>

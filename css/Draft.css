@@ -1,5 +1,5 @@
 body {
-  font-family: monospace;
+  font-family: 'Times New Roman';
 }
 
 /* .home-welcome {
@@ -25,4 +25,9 @@ body {
   height: 100%;
   background-color: black;
   opacity: 0.3;
+}
+
+.login-button {
+  background-color: #bc3a95;
+  border: 1px solid gainsboro;
 }
