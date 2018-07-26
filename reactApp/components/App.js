@@ -8,6 +8,7 @@ class App extends React.Component {
   }
 
   render() {
+    localStorage.setItem('url', 'https://buddha-docs-server.herokuapp.com/');
     return (
       <div>
         <div>
