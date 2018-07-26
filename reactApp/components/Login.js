@@ -1,64 +1,78 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
+import { Button, Row, Input, Icon } from 'react-materialize';
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       username: '',
       password: ''
     };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.loginUser = this.loginUser.bind(this);
   }
 
-  login() {
-    axios.post("http://localhost:3000/login", {
-      username: this.state.username,
-      password: this.state.password,
-    })
-    .then((resp) => {
-      if (resp.data.success) {
-        console.log("success", resp.data);
-        this.props.history.push('/userDocs/' + resp.data.user._id)
-      } else {
-        console.log("err", resp);
-      }
-    })
-    .catch((error) => {
-      console.log("Error", error);
-      return null;
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
     });
+  }
+
+  loginUser() {
+    console.log(
+      'in user here is localstorage url ',
+      localStorage.getItem('url')
+    );
+    axios
+      .post(localStorage.getItem('url') + '/login', this.state)
+      .then(resp => {
+        if (resp.data.user) {
+          console.log('The resp to logging in: ', resp.data);
+          // this.props.history.push('/userDocs/' + resp.data.user._id)
+        } else {
+          console.log('\n ERR was not able to get response \n');
+        }
+      })
+      .catch(err => console.error('There was an error logging in: ', err));
   }
 
   render() {
     return (
-      <div className="page-container">
-        <h3>Login</h3>
-        <input
-          type="text"
-          placeholder="username"
-          name="username"
-          value={this.state.username || ''}
-          onChange={(event) => { this.setState({ username: event.target.value })}}
-        />
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          value={this.state.password || ''}
-          onChange={(event) => { this.setState({ password: event.target.value })}}
-        />
-        <br />
-        <button onClick={() => this.login()}>Login</button>
-        <br />
-        <Link to='/register'>
-          <div style={{padding: '10px'}}>Don't have an account? Sign up here.</div>
-        </Link>
+      <div className="login-page">
+        <div className="color-overlay" />
+        <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
+          <h2 className={'login-title'}>Buddha Docs</h2>
+          <Row>
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.username}
+              name="username"
+              type="text"
+              label="username"
+              s={12}
+            />
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.password}
+              name="password"
+              type="password"
+              label="password"
+              s={12}
+            />
+            <Button onClick={this.loginUser} className="login-button">
+              Login
+              <Icon left>offline_bolt</Icon>
+            </Button>
+          </Row>
+        </div>
       </div>
-    )
+    );
   }
 }
 
