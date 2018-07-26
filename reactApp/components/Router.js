@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Login from './Login';
+import Home from './Home';
 
 class Router extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Router extends React.Component {
         <div>
           <Switch>
             <Route path="/" component={Login} />
+            <Route path="/userDocs" component={Home} />
           </Switch>
         </div>
       </div>
