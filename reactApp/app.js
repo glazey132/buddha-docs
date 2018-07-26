@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MemoryRouter } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import App from './components/App';
+import Router from './components/Router';
 
 require('../css/Draft.css');
 
 ReactDOM.render(
-  <MemoryRouter>
+  <BrowserRouter basename="/">
     <MuiThemeProvider>
-      <App />
+      <Route path={'/'} component={Router} />
     </MuiThemeProvider>
-  </MemoryRouter>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
