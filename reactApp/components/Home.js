@@ -28,8 +28,8 @@ class Home extends React.Component {
     axios
       .post(localStorage.getItem('url') + '/login', this.state)
       .then(resp => {
-        if (resp) {
-          console.log('The resp to logging in: ', resp);
+        if (resp.data.user) {
+          console.log('The resp to logging in: ', resp.data);
         } else {
           console.log('\n ERR was not able to get response \n');
         }
