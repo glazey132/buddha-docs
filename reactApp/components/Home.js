@@ -11,6 +11,7 @@ class Home extends React.Component {
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.loginUser = this.loginUser.bind(this);
   }
 
   handleInputChange(event) {
@@ -20,15 +21,16 @@ class Home extends React.Component {
     this.setState({
       [name]: value
     });
-    console.log('this state after change ', this.state);
   }
+
+  loginUser(event) {}
 
   render() {
     return (
       <div className="home-page">
         <div className="color-overlay" />
         <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
-          <h2 className={'home-welcome'}>Buddha Docs</h2>
+          <h2 className={'home-title'}>Buddha Docs</h2>
           <Row>
             <Input
               onChange={this.handleInputChange}
@@ -46,7 +48,10 @@ class Home extends React.Component {
               label="password"
               s={12}
             />
-            <Button className="login-button">Login</Button>
+            <Button onClick={this.loginUser} className="login-button">
+              Login
+              <Icon left>offline_bolt</Icon>
+            </Button>
           </Row>
         </div>
       </div>
