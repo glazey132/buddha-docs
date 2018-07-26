@@ -25,6 +25,10 @@ class Home extends React.Component {
   }
 
   loginUser() {
+    console.log(
+      'in user here is localstorage url ',
+      localStorage.getItem('url')
+    );
     axios
       .post(localStorage.getItem('url') + '/login', this.state)
       .then(resp => {
