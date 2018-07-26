@@ -1,8 +1,8 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import Home from './Home';
+import { Route, Switch } from 'react-router-dom';
+import Login from './Login';
 
-class App extends React.Component {
+class Router extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -13,11 +13,13 @@ class App extends React.Component {
     return (
       <div>
         <div>
-          <Route exact path="/" component={Home} />
+          <Switch>
+            <Route path="/" component={Login} />
+          </Switch>
         </div>
       </div>
     );
   }
 }
 
-export default App;
+export default Router;

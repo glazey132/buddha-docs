@@ -4,12 +4,12 @@ html {
   font-family: fantasy;
 }
 
-.home-title {
+.login-title {
   font-style: italic;
   color: pink;
 }
 
-.home-page {
+.login-page {
   display: flex;
   justify-content: center;
   align-items: center;
