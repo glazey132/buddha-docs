@@ -24,7 +24,16 @@ class Home extends React.Component {
     });
   }
 
-  loginUser(event) {}
+  loginUser() {
+    axios
+      .post(localStorage.get('url') + '/login', this.state)
+      .then(resp => {
+        if (resp) {
+          console.log('The resp to logging in: ', resp);
+        }
+      })
+      .catch(err => console.error('There was an error logging in: ', err));
+  }
 
   render() {
     return (
