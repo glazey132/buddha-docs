@@ -32,13 +32,12 @@ class Login extends React.Component {
     axios
       .post(localStorage.getItem('url') + '/login', this.state)
       .then(resp => {
-        console.log('the resp.data ', resp.data);
-        if (resp.data.user) {
-          console.log('The resp to logging in: ', resp.data);
-          this.props.history.push('/userDocs/' + resp.data.user._id);
-        } else {
-          console.log('\n ERR was not able to get response \n');
+        console.log('the resp.data ', resp);
+        if (!resp.data) {
+          console.error('\n Unable to get a response from server on login \n');
         }
+        this.props.history.push('/home/' + resp.data._id);
+        console.log('this.props.history? ', this.props.history);
       })
       .catch(err => console.error('There was an error logging in: ', err));
   }

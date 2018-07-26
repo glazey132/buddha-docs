@@ -13,12 +13,8 @@ class Router extends React.Component {
     localStorage.setItem('url', 'http://localhost:3000');
     return (
       <div>
-        <div>
-          <Switch>
-            <Route path="/" component={Login} />
-            <Route path="/userDocs" component={Home} />
-          </Switch>
-        </div>
+        <Route path={'/'} exact component={Login} />
+        <Route path={'/home/:userid'} exact component={Home} />
       </div>
     );
   }

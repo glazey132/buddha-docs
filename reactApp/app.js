@@ -8,7 +8,7 @@ import Router from './components/Router';
 require('../css/Draft.css');
 
 ReactDOM.render(
-  <BrowserRouter basename="/">
+  <BrowserRouter>
     <MuiThemeProvider>
       <Route path={'/'} component={Router} />
     </MuiThemeProvider>
