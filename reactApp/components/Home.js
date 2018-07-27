@@ -43,12 +43,8 @@ class Home extends React.Component {
       .get(localStorage.getItem('url') + '/getDocuments/' + userId)
       .then(resp => {
         console.log('the response is here ', resp);
-        resp.data.docs.forEach(doc => {
-          if (doc.author === userId) {
-            this.setState({
-              docs: [...this.state.docs, doc]
-            });
-          }
+        this.setState({
+          docs: [...this.state.docs, resp.data.docs]
         });
       });
     console.log('here is the this.state after all ', this.state);
