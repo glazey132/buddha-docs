@@ -16,13 +16,13 @@ class Home extends React.Component {
   newDoc() {
     console.log('this.state before new doc ', this.state);
     axios
-      .post('http://localhost:3000/newDoc/', {
+      .post(localStorage.getItem('url') + '/newDoc', {
         name: this.state.newDocumentName,
         author: this.props.match.params.userid
       })
       .then(resp => {
         console.log('the response to new doc ', resp);
-        this.setState({ docs: this.state.docs.concat(resp.data.doc) });
+        this.setState({ docs: this.state.docs.push(resp.data.doc) });
         console.log('this.state after new doc ', this.state);
       });
   }
