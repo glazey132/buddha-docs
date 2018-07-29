@@ -46,7 +46,7 @@ class Login extends React.Component {
           '\n ~~ the response.data to logging in ===> \n ',
           resp.data
         );
-        this.props.history.push('/home');
+        this.props.history.push('/home/' + resp.data.id);
       })
       .catch(err => console.error('There was an error logging in: ', err));
   }
@@ -55,8 +55,8 @@ class Login extends React.Component {
     return (
       <div className="login-page">
         <div className="color-overlay" />
-        <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
-          <h2 className={'auth-title'}>Buddha Docs</h2>
+        <div className="auth-center-section">
+          <h2 className="auth-title">Buddha Docs</h2>
           <Row>
             <Input
               onChange={this.handleInputChange}

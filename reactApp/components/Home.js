@@ -2,6 +2,13 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+const axiosConfig = {
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+};
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +19,7 @@ class Home extends React.Component {
       newDocumentName: '',
       newDocumentPassword: ''
     };
+    console.log('this.props in home constructor ', this.props);
   }
 
   newDoc() {
@@ -38,16 +46,25 @@ class Home extends React.Component {
       .catch(error => console.log(error));
   }
 
-  componentWillMount() {
-    console.log('here is this.state ', this.state);
-    const userId = this.props.match.params.userid;
-    axios.get(localStorage.getItem('url') + '/docs/').then(resp => {
-      console.log('the response is here ', resp);
-      this.setState({
-        docs: [...this.state.docs, resp.data.docs]
-      });
-    });
-    console.log('here is the this.state after all ', this.state);
+  async componentDidMount() {
+    try {
+      let resp = await axios
+        .get(
+          localStorage.getItem('url') +
+            '/getAllDocs/' +
+            this.props.match.params.userid,
+          axiosConfig
+        )
+        .then(resp => {
+          console.log('awaited response in comp did mount of home ', resp);
+          // this.setState({
+          //   docs: [...this.state.docs, resp.data.docs],
+          //   user: resp.data.user
+          // });
+        });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   render() {
@@ -93,7 +110,7 @@ class Home extends React.Component {
             Create Document
           </button>
         </div>
-        {/* <div className="document-container">
+        <div className="document-container">
           <div className="document-list">
             <p>My Documents:</p>
             <ul>
@@ -104,7 +121,7 @@ class Home extends React.Component {
               ))}
             </ul>
           </div>
-        </div> */}
+        </div>
         <br />
         <div className="create-or-share-document-div">
           <input

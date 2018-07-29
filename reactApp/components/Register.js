@@ -45,7 +45,7 @@ class Register extends React.Component {
     return (
       <div className="register-page">
         <div className="color-overlay" />
-        <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
+        <div className="auth-center-section">
           <h2 className={'auth-title'}>Buddha Docs</h2>
           <Row>
             <Input

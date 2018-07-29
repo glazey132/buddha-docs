@@ -47,3 +47,9 @@ html {
   background-color: #bc3a95;
   border: 1px solid gainsboro;
 }
+
+.auth-center-section {
+  color: white;
+  z-index: 4;
+  text-align: center;
+}
