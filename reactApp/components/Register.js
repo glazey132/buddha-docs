@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Row, Input, Icon } from 'react-materialize';
+import '../../css/Register.css';
 
 class Register extends React.Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class Register extends React.Component {
       <div className="register-page">
         <div className="color-overlay" />
         <div className="auth-center-section">
-          <h2 className={'auth-title'}>Buddha Docs</h2>
+          <h2 className="auth-title">Buddha Docs</h2>
           <Row>
             <Input
               onChange={this.handleInputChange}

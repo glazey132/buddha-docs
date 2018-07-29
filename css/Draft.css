@@ -3,53 +3,78 @@ html {
   font-family: fantasy;
 }
 
-.auth-title {
-  font-style: italic;
-  color: pink;
+.document-container {
+  display: block;
+  min-height: 25vh;
+  max-height: 25vh;
+  border: 1px solid black;
+  padding: 10px;
+  overflow-y: scroll;
+  text-align: left;
 }
 
-.register-page {
+.document-list {
+  max-height: inherit;
+  box-sizing: border-box;
+  text-align: left;
+  overflow-y: scroll;
+}
+
+.create-or-share-document-div {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-image: url('https://thumbs.gfycat.com/HarmfulDeadlyDore-size_restricted.gif');
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: absolute;
-  width: 100%;
-  height: 100%;
 }
 
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-image: url('https://thumbs.gfycat.com/SaltyPlayfulAlpinegoat-size_restricted.gif');
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: absolute;
-  width: 100%;
-  height: 100%;
+.toolbar > * {
+  margin-right: 5px;
 }
 
-.color-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  opacity: 0.3;
-}
-
-.auth-button {
-  border-radius: 2em;
-  background-color: #bc3a95;
-  border: 1px solid gainsboro;
-}
-
-.auth-center-section {
-  color: white;
-  z-index: 4;
+.center-align {
   text-align: center;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.page-container {
+  padding: 4vh 20vw;
+  margin: 0;
+  text-align: center;
+  border: 2px solid red;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.document-header {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.back-to-documents-button {
+  border: 0.5px solid black;
+  background-color: lightgray;
+  margin-bottom: 20px;
+}
+
+.logout-button {
+  height: 3vh;
+  border: 0.5px solid black;
+  background-color: lightgray;
+  margin-top: 3vh;
+  margin-right: 20px;
+}
+
+.document-id {
+  margin-left: 20px;
+}
+
+.editor-container {
+  border: 2px solid black;
+  height: 60vh;
+  overflow-y: scroll;
+  padding: 20px;
 }
