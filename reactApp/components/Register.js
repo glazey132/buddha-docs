@@ -36,7 +36,7 @@ class Register extends React.Component {
           '\n ~~ the response.data to registering ===> \n ',
           resp.data
         );
-        this.props.history.push('/home');
+        this.props.history.push('/login');
       })
       .catch(err => console.error('There was an error logging in: ', err));
   }

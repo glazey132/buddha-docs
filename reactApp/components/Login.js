@@ -3,6 +3,17 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Row, Input, Icon } from 'react-materialize';
 
+/*
+** necessary to make req.user available on server side
+** when axios sends a request. Must set these options on all requests.
+*/
+const axiosConfig = {
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+};
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +37,7 @@ class Login extends React.Component {
 
   loginUser() {
     axios
-      .post(localStorage.getItem('url') + '/login', this.state)
+      .post(localStorage.getItem('url') + '/login', this.state, axiosConfig)
       .then(resp => {
         if (!resp.data) {
           console.error('\n Unable to get a response from server on login \n');
