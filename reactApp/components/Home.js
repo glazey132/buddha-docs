@@ -9,22 +9,24 @@ class Home extends React.Component {
     this.state = {
       docs: [],
       user: '',
-      newDocumentName: ''
+      newDocumentName: '',
+      newDocumentPassword: ''
     };
   }
 
   newDoc() {
     console.log('this.state before new doc ', this.state);
-    axios
-      .post(localStorage.getItem('url') + '/newDoc', {
-        name: this.state.newDocumentName,
-        author: this.props.match.params.userid
-      })
-      .then(resp => {
-        console.log('the response to new doc ', resp);
-        this.setState({ docs: this.state.docs.push(resp.data.doc) });
-        console.log('this.state after new doc ', this.state);
-      });
+    axios(localStorage.getItem('url') + '/newDoc', {
+      method: 'post',
+      data: {
+        title: this.state.newDocumentName,
+        password: this.state.newDocumentPassword
+      },
+      withCredentials: true
+    }).then(resp => {
+      console.log('the response to new doc ', resp);
+      this.setState({ docs: [...this.state.docs, resp.data.doc] });
+    });
   }
 
   logout() {
@@ -39,14 +41,12 @@ class Home extends React.Component {
   componentWillMount() {
     console.log('here is this.state ', this.state);
     const userId = this.props.match.params.userid;
-    axios
-      .get(localStorage.getItem('url') + '/getDocuments/' + userId)
-      .then(resp => {
-        console.log('the response is here ', resp);
-        this.setState({
-          docs: [...this.state.docs, resp.data.docs]
-        });
+    axios.get(localStorage.getItem('url') + '/docs/').then(resp => {
+      console.log('the response is here ', resp);
+      this.setState({
+        docs: [...this.state.docs, resp.data.docs]
       });
+    });
     console.log('here is the this.state after all ', this.state);
   }
 
@@ -62,11 +62,21 @@ class Home extends React.Component {
         <div className="create-or-share-document-div">
           <input
             type="text"
-            placeholder="New Document"
-            name="newdocument"
+            placeholder="New document name"
+            name="newDocumentName"
             value={this.state.newDocumentName || ''}
             onChange={event => {
               this.setState({ newDocumentName: event.target.value });
+            }}
+            style={{ width: '30%' }}
+          />
+          <input
+            type="password"
+            placeholder="new document password"
+            name="newDocumentPassword"
+            value={this.state.newDocumentPassword || ''}
+            onChange={event => {
+              this.setState({ newDocumentPassword: event.target.value });
             }}
             style={{ width: '30%' }}
           />
@@ -83,18 +93,18 @@ class Home extends React.Component {
             Create Document
           </button>
         </div>
-        <div className="document-container">
+        {/* <div className="document-container">
           <div className="document-list">
             <p>My Documents:</p>
             <ul>
               {this.state.docs.map(doc => (
-                <div key={doc.title}>
+                <div key={doc._id}>
                   <Link to={`/editDocument/${doc._id}`}>{doc.title}</Link>
                 </div>
               ))}
             </ul>
           </div>
-        </div>
+        </div> */}
         <br />
         <div className="create-or-share-document-div">
           <input
