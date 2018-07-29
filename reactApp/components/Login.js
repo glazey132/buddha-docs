@@ -68,6 +68,11 @@ class Login extends React.Component {
               <Icon left>offline_bolt</Icon>
             </Button>
           </Row>
+          <Row>
+            <Link to="/register" replace>
+              <p>Not signed up yet? Register Here</p>
+            </Link>
+          </Row>
         </div>
       </div>
     );
