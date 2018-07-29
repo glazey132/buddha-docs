@@ -23,12 +23,58 @@ class Register extends React.Component {
     });
   }
 
-  registerUser() {}
+  registerUser() {
+    axios
+      .post(localStorage.getItem('url') + '/register', this.state)
+      .then(resp => {
+        if (!resp.data) {
+          console.error(
+            '\n Unable to get a response from server on register \n'
+          );
+        }
+        console.log(
+          '\n ~~ the response.data to registering ===> \n ',
+          resp.data
+        );
+        this.props.history.push('/home');
+      })
+      .catch(err => console.error('There was an error logging in: ', err));
+  }
 
   render() {
     return (
       <div className="register-page">
-        <h2>Register page</h2>
+        <div className="color-overlay" />
+        <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
+          <h2 className={'auth-title'}>Buddha Docs</h2>
+          <Row>
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.username}
+              name="username"
+              type="text"
+              label="username"
+              s={12}
+            />
+            <Input
+              onChange={this.handleInputChange}
+              value={this.state.password}
+              name="password"
+              type="password"
+              label="password"
+              s={12}
+            />
+            <Button onClick={this.registerUser} className="auth-button">
+              Register
+              <Icon left>offline_bolt</Icon>
+            </Button>
+          </Row>
+          <Row>
+            <Link to="/login">
+              <p>Already signed up? Login Here</p>
+            </Link>
+          </Row>
+        </div>
       </div>
     );
   }

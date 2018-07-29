@@ -35,7 +35,7 @@ class Login extends React.Component {
           '\n ~~ the response.data to logging in ===> \n ',
           resp.data
         );
-        this.props.history.push('/home/' + resp.data._id);
+        this.props.history.push('/home');
       })
       .catch(err => console.error('There was an error logging in: ', err));
   }
@@ -45,7 +45,7 @@ class Login extends React.Component {
       <div className="login-page">
         <div className="color-overlay" />
         <div style={{ color: 'white', zIndex: 4, textAlign: 'center' }}>
-          <h2 className={'login-title'}>Buddha Docs</h2>
+          <h2 className={'auth-title'}>Buddha Docs</h2>
           <Row>
             <Input
               onChange={this.handleInputChange}
@@ -63,13 +63,13 @@ class Login extends React.Component {
               label="password"
               s={12}
             />
-            <Button onClick={this.loginUser} className="login-button">
+            <Button onClick={this.loginUser} className="auth-button">
               Login
               <Icon left>offline_bolt</Icon>
             </Button>
           </Row>
           <Row>
-            <Link to="/register" replace>
+            <Link to="/register">
               <p>Not signed up yet? Register Here</p>
             </Link>
           </Row>
