@@ -15,9 +15,11 @@ class Home extends React.Component {
 
     this.state = {
       docs: [],
-      user: '',
+      username: '',
+      userid: '',
       newDocumentName: '',
-      newDocumentPassword: ''
+      newDocumentPassword: '',
+      loading: true
     };
     console.log('this.props in home constructor ', this.props);
   }
@@ -33,8 +35,20 @@ class Home extends React.Component {
       withCredentials: true
     }).then(resp => {
       console.log('the response to new doc ', resp);
-      this.setState({ docs: [...this.state.docs, resp.data.doc] });
+      this.setState({
+        docs: [...this.state.docs, resp.data.document],
+        newDocumentName: '',
+        newDocumentPassword: ''
+      });
     });
+  }
+
+  renderDocumentList() {
+    return this.state.docs.map((doc, i) => (
+      <div key={i}>
+        <Link to={`/editDocument/${doc._id}`}>{doc.title}</Link>
+      </div>
+    ));
   }
 
   logout() {
@@ -57,10 +71,12 @@ class Home extends React.Component {
         )
         .then(resp => {
           console.log('awaited response in comp did mount of home ', resp);
-          // this.setState({
-          //   docs: [...this.state.docs, resp.data.docs],
-          //   user: resp.data.user
-          // });
+          this.setState({
+            docs: resp.data.docs,
+            username: resp.data.username,
+            userid: resp.data.userid,
+            loading: false
+          });
         });
     } catch (e) {
       console.log(e);
@@ -68,82 +84,84 @@ class Home extends React.Component {
   }
 
   render() {
-    return (
-      <div className="page-container">
-        <div className="document-header">
-          <button className="logout-button" onClick={() => this.logout()}>
-            Logout
-          </button>
-          <h3>Documents Portal</h3>
+    if (this.state.loading) {
+      return (
+        <div>
+          <h2>Loading...</h2>
         </div>
-        <div className="create-or-share-document-div">
-          <input
-            type="text"
-            placeholder="New document name"
-            name="newDocumentName"
-            value={this.state.newDocumentName || ''}
-            onChange={event => {
-              this.setState({ newDocumentName: event.target.value });
-            }}
-            style={{ width: '30%' }}
-          />
-          <input
-            type="password"
-            placeholder="new document password"
-            name="newDocumentPassword"
-            value={this.state.newDocumentPassword || ''}
-            onChange={event => {
-              this.setState({ newDocumentPassword: event.target.value });
-            }}
-            style={{ width: '30%' }}
-          />
-          <button
-            style={{
-              border: 'solid black 1px',
-              padding: '5px',
-              borderRadius: '10px',
-              height: '3%',
-              backgroundColor: 'lightgrey'
-            }}
-            onClick={() => this.newDoc()}
-          >
-            Create Document
-          </button>
-        </div>
-        <div className="document-container">
-          <div className="document-list">
-            <p>My Documents:</p>
-            <ul>
-              {this.state.docs.map(doc => (
-                <div key={doc._id}>
-                  <Link to={`/editDocument/${doc._id}`}>{doc.title}</Link>
-                </div>
-              ))}
-            </ul>
+      );
+    } else {
+      return (
+        <div className="page-container">
+          <div className="document-header">
+            <button className="logout-button" onClick={() => this.logout()}>
+              Logout
+            </button>
+            <h3>Welcome, {this.state.username}.</h3>
+          </div>
+          <div className="create-or-share-document-div">
+            <input
+              type="text"
+              placeholder="New document name"
+              name="newDocumentName"
+              value={this.state.newDocumentName || ''}
+              onChange={event => {
+                this.setState({ newDocumentName: event.target.value });
+              }}
+              style={{ width: '30%' }}
+            />
+            <input
+              type="password"
+              placeholder="new document password"
+              name="newDocumentPassword"
+              value={this.state.newDocumentPassword || ''}
+              onChange={event => {
+                this.setState({ newDocumentPassword: event.target.value });
+              }}
+              style={{ width: '30%' }}
+            />
+            <button
+              style={{
+                border: 'solid black 1px',
+                padding: '5px',
+                borderRadius: '10px',
+                height: '3%',
+                backgroundColor: 'lightgrey'
+              }}
+              onClick={() => this.newDoc()}
+            >
+              Create Document
+            </button>
+          </div>
+          <div className="document-container">
+            <div className="document-list">
+              <p>My Documents:</p>
+              <ul>{this.renderDocumentList()}</ul>
+            </div>
+          </div>
+          <br />
+          <div className="create-or-share-document-div">
+            <input
+              style={{ width: '30%' }}
+              type="text"
+              placeholder="paste a docID to collab on a doc"
+              ref="sharedDoc"
+            />
+            <button
+              style={{
+                border: 'solid black 1px',
+                padding: '5px',
+                borderRadius: '10px',
+                height: '3%',
+                backgroundColor: 'lightgrey'
+              }}
+            >
+              Add Shared Doc
+            </button>
           </div>
         </div>
-        <br />
-        <div className="create-or-share-document-div">
-          <input
-            style={{ width: '30%' }}
-            type="text"
-            placeholder="paste a docID to collab on a doc"
-            ref="sharedDoc"
-          />
-          <button
-            style={{
-              border: 'solid black 1px',
-              padding: '5px',
-              borderRadius: '10px',
-              height: '3%',
-              backgroundColor: 'lightgrey'
-            }}
-          >
-            Add Shared Doc
-          </button>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
