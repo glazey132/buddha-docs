@@ -11,6 +11,7 @@ html {
   padding: 10px;
   overflow-y: scroll;
   text-align: left;
+  background: azure;
 }
 
 .document-list {
@@ -38,15 +39,6 @@ html {
 
 .left-align {
   text-align: left;
-}
-
-.page-container {
-  padding: 4vh 20vw;
-  margin: 0;
-  text-align: center;
-  border: 2px solid red;
-  width: 100%;
-  min-height: 100vh;
 }
 
 .document-header {
