@@ -22,7 +22,6 @@ class Home extends React.Component {
       newDocumentPassword: '',
       loading: true
     };
-    console.log('this.props in home constructor ', this.props);
   }
 
   newDoc() {
