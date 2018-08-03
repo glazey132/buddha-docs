@@ -22,6 +22,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { CirclePicker } from 'react-color';
 import axios from 'axios';
 import { Map } from 'immutable';
+import '../../css/Document.css';
 import io from 'socket.io-client';
 
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(
