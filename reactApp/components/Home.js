@@ -46,7 +46,7 @@ class Home extends React.Component {
   renderDocumentList() {
     return this.state.docs.map((doc, i) => (
       <div key={i}>
-        <Link to={`/editDocument/${doc._id}`}>{doc.title}</Link>
+        <Link to={`/document/${doc._id}`}>{doc.title}</Link>
       </div>
     ));
   }
