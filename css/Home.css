@@ -1,5 +1,5 @@
 .page-container {
-  background-image: url('https://thumbs.gfycat.com/FeistyBackHapuku-size_restricted.gif');
+  background-image: url('https://thumbs.gfycat.com/OldZigzagArmyant-size_restricted.gif');
   background-repeat: no-repeat;
   background-size: cover;
   padding: 4vh 20vw;
@@ -7,4 +7,23 @@
   text-align: center;
   width: 100%;
   min-height: 100vh;
+}
+
+.small-input {
+  background-color: red;
+  width: 40% !important;
+  font-weight: bold;
+  color: white;
+}
+
+.home-styled-button {
+  border: solid black 1px;
+  padding: 5px;
+  border-radius: 10px;
+  height: 3%;
+  background-color: lightgrey;
+}
+
+.title {
+  color: darkorange;
 }

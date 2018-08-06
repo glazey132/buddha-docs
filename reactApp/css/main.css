@@ -116,23 +116,6 @@ h1 {
   padding: 10px;
 }
 
-.document-container {
-  display: block;
-  min-height: 25vh;
-  max-height: 25vh;
-  border: 1px solid black;
-  padding: 10px;
-  overflow-y: scroll;
-  text-align: left;
-}
-
-.document-list {
-  max-height: inherit;
-  box-sizing: border-box;
-  text-align: left;
-  overflow-y: scroll;
-}
-
 .create-or-share-document-div {
   display: flex;
 }
@@ -183,11 +166,4 @@ h1 {
 
 .document-id {
   margin-left: 20px;
-}
-
-.editor-container {
-  border: 2px solid black;
-  height: 60vh;
-  overflow-y: scroll;
-  padding: 20px;
 }

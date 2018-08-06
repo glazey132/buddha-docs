@@ -97,7 +97,7 @@ class Home extends React.Component {
             <button className="logout-button" onClick={() => this.logout()}>
               Logout
             </button>
-            <h3>Welcome, {this.state.username}.</h3>
+            <h3 className="title">Welcome, {this.state.username}.</h3>
           </div>
           <div className="create-or-share-document-div">
             <input
@@ -108,9 +108,10 @@ class Home extends React.Component {
               onChange={event => {
                 this.setState({ newDocumentName: event.target.value });
               }}
-              style={{ width: '30%' }}
+              className="small-input"
             />
             <input
+              className="small-input"
               type="password"
               placeholder="new document password"
               name="newDocumentPassword"
@@ -118,16 +119,9 @@ class Home extends React.Component {
               onChange={event => {
                 this.setState({ newDocumentPassword: event.target.value });
               }}
-              style={{ width: '30%' }}
             />
             <button
-              style={{
-                border: 'solid black 1px',
-                padding: '5px',
-                borderRadius: '10px',
-                height: '3%',
-                backgroundColor: 'lightgrey'
-              }}
+              className="home-styled-button"
               onClick={() => this.newDoc()}
             >
               Create Document
@@ -142,22 +136,12 @@ class Home extends React.Component {
           <br />
           <div className="create-or-share-document-div">
             <input
-              style={{ width: '30%' }}
+              className="small-input"
               type="text"
               placeholder="paste a docID to collab on a doc"
               ref="sharedDoc"
             />
-            <button
-              style={{
-                border: 'solid black 1px',
-                padding: '5px',
-                borderRadius: '10px',
-                height: '3%',
-                backgroundColor: 'lightgrey'
-              }}
-            >
-              Add Shared Doc
-            </button>
+            <button className="home-styled-button">Add Shared Doc</button>
           </div>
         </div>
       );

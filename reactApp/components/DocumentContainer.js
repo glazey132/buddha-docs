@@ -39,7 +39,6 @@ class DocumentContainer extends React.Component {
     //socket stuff
     this.state.socket.on('connect', () => {
       console.log('connected to web sockets!');
-      console.log('here is the id in state ', this.state);
       this.state.socket.emit('join', this.state.id);
     });
     //axios get doc
@@ -149,47 +148,19 @@ class DocumentContainer extends React.Component {
     }
 
     return (
-      <div>
-        <p>the doc editor space</p>
-        <DocumentEditor
-          props={this.props}
-          loading={this.state.loading}
-          title={this.state.title}
-          docId={this.state.id}
-          currentSelection={this.state.currentSelection}
-          editorState={this.state.editorState}
-          onChangeFn={this.onChange}
-          socket={this.state.socket}
-          setStateFn={this.setStateFunction.bind(this)}
-          exitDoc={this.exitDoc.bind(this)}
-          saveFn={this.saveDocument.bind(this)}
-        />
-      </div>
-    );
-  }
-}
-
-class Head extends React.Component {
-  render() {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          alignItems: 'center'
-        }}
-      >
-        <Link onClick={this.props.exitDoc} to="/userDocs">
-          <p>hi</p>
-        </Link>
-        <div>
-          <h3>{!this.props.loading && <b>{this.props.title}</b>}</h3>
-          <p>ID: {this.props.docId}</p>
-        </div>
-        <a onClick={this.props.saveFn}>
-          <p>hi</p>
-        </a>
-      </div>
+      <DocumentEditor
+        props={this.props}
+        loading={this.state.loading}
+        title={this.state.title}
+        docId={this.state.id}
+        currentSelection={this.state.currentSelection}
+        editorState={this.state.editorState}
+        onChangeFn={this.onChange}
+        socket={this.state.socket}
+        setStateFn={this.setStateFunction.bind(this)}
+        exitDoc={this.exitDoc.bind(this)}
+        saveFn={this.saveDocument.bind(this)}
+      />
     );
   }
 }
