@@ -301,7 +301,7 @@ class DocumentEditor extends React.Component {
 
   render() {
     return (
-      <div className="page-container">
+      <div className="document-container">
         <div className="document-header">
           <button
             name="backbutton"

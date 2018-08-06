@@ -1,0 +1,26 @@
+/* .document-container {
+  background-image: url('https://thumbs.gfycat.com/FeistyBackHapuku-size_restricted.gif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 4vh 20vw;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+} */
+
+.page-container {
+  padding: 4vh 20vw;
+  margin: 0;
+  text-align: center;
+  border: 2px solid red;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.document-list {
+  max-height: inherit;
+  box-sizing: border-box;
+  text-align: left;
+  overflow-y: scroll;
+}

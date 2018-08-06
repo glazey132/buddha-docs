@@ -42,12 +42,13 @@ class Login extends React.Component {
       .then(resp => {
         if (!resp.data) {
           console.error('\n Unable to get a response from server on login \n');
+        } else if (resp.data.success) {
+          console.log(
+            '\n ~~ the response.data to logging in ===> \n ',
+            resp.data
+          );
+          this.props.history.push('/home/' + resp.data.id);
         }
-        console.log(
-          '\n ~~ the response.data to logging in ===> \n ',
-          resp.data
-        );
-        this.props.history.push('/home/' + resp.data.id);
       })
       .catch(err => console.error('There was an error logging in: ', err));
   }

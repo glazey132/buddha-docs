@@ -149,8 +149,7 @@ class DocumentContainer extends React.Component {
     }
 
     return (
-      <div>
-        <p>the doc editor space</p>
+      <div style={{ backgroundColor: 'yellow' }}>
         <DocumentEditor
           props={this.props}
           loading={this.state.loading}
@@ -176,7 +175,8 @@ class Head extends React.Component {
         style={{
           display: 'flex',
           justifyContent: 'space-around',
-          alignItems: 'center'
+          alignItems: 'center',
+          backgroundColor: 'pink'
         }}
       >
         <Link onClick={this.props.exitDoc} to="/userDocs">
