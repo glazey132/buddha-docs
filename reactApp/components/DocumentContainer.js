@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 import {
   Editor,
   EditorState,
@@ -6,7 +6,7 @@ import {
   convertFromRaw,
   SelectionState
 } from 'draft-js';
-const { Link } = require('react-router-dom');
+import Link from 'react-router-dom';
 import DocumentEditor from './DocumentEditor';
 import axios from 'axios';
 import io from 'socket.io-client';
