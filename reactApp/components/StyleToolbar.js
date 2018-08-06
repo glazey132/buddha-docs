@@ -1,11 +1,5 @@
 var React = require('react');
 import { RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
-import * as colors from 'material-ui/styles/colors';
-import AppBar from 'material-ui/AppBar';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import Popover from 'material-ui/Popover';
-import { CirclePicker } from 'react-color';
 import { Map } from 'immutable';
 import '../../css/Toolbar.css';
 
@@ -20,7 +14,7 @@ const myBlockTypes = DefaultDraftBlockRenderMap.merge(
   })
 );
 
-class TextToolBox extends React.Component {
+class StyleToolbar extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -37,43 +31,6 @@ class TextToolBox extends React.Component {
         onMouseDown={e => this.toggleFormat(e, style, block)}
         icon={<FontIcon className="material-icons">{icon}</FontIcon>}
       />
-    );
-  }
-
-  //Color picker helper functions
-  openColorPicker(e) {
-    this.setState({
-      colorPickerOpen: true,
-      colorPickerButton: e.target
-    });
-  }
-
-  closeColorPicker(e) {
-    this.setState({
-      colorPickerOpen: false
-    });
-  }
-
-  colorPicker() {
-    return (
-      <div style={{ display: 'inline-block' }}>
-        <RaisedButton
-          backgroundColor={colors.orange200}
-          icon={
-            <FontIcon className="material-icons">format_color_text</FontIcon>
-          }
-          onClick={this.openColorPicker.bind(this)}
-        />
-        <Popover
-          open={this.state.colorPickerOpen}
-          anchorEl={this.state.colorPickerButton}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-          onRequestClose={this.closeColorPicker.bind(this)}
-        >
-          <CirclePicker onChangeComplete={this.formatColor.bind(this)} />
-        </Popover>
-      </div>
     );
   }
 
@@ -116,4 +73,4 @@ class TextToolBox extends React.Component {
   }
 }
 
-export default TextToolBox;
+export default StyleToolbar;
