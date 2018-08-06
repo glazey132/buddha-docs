@@ -6,6 +6,7 @@ import {
   convertToRaw,
   SelectionState
 } from 'draft-js';
+import axios from 'axios';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
@@ -17,6 +18,15 @@ import MenuItem from 'material-ui/MenuItem';
 import * as colors from 'material-ui/styles/colors';
 
 import myBlockTypes from '../assets/blockTypes';
+
+import '../../css/DocumentEditor.css';
+
+const axiosConfig = {
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+};
 
 class DocumentEditor extends React.Component {
   constructor(props) {
@@ -35,11 +45,11 @@ class DocumentEditor extends React.Component {
       color: 'white',
       editorState: EditorState.createEmpty(),
       inlineStyles: {},
-      id: '',
       font: '',
       fontColor: '',
       backgroundColor: ''
     };
+    console.log('this.props in doc editor ', this.props);
     this.onChange = editorState => this.setState({ editorState });
   }
 
@@ -56,14 +66,14 @@ class DocumentEditor extends React.Component {
         isBackward: obj.isBackward
       });
       const originalSelection = this.props.currentSelection;
-      this.props.setStateFunction(
+      this.props.setStateFn(
         EditorState.forceSelection(this.props.editorState, selectionState)
       );
       const coords = window
         .getSelection()
         .getRangeAt(0)
         .getBoundingClientRect();
-      this.props.setStateFunction(
+      this.props.setStateFn(
         EditorState.forceSelection(this.props.editorState, originalSelection)
       );
       if (obj.isCollapsed) {
@@ -154,16 +164,20 @@ class DocumentEditor extends React.Component {
     console.log('this.state after save click ', this.state);
     console.log('the doc content in raw form ---> ', rawJson);
     axios
-      .post('http://localhost:3000/saveDoc/', {
-        docid: this.state.id,
-        title: this.state.title,
-        contentState: rawJson
-      })
+      .post(
+        localStorage.getItem('url') + '/saveDoc/',
+        {
+          docid: this.props.docId,
+          title: this.props.title,
+          contents: rawJson
+        },
+        axiosConfig
+      )
       .then(resp => {
         console.log('~`* Successfully saved doc data *`~', resp);
       })
       .catch(error => {
-        console.log('Error saving doc ', error);
+        console.log('Caught error saving doc ', error);
       });
   }
 
@@ -301,7 +315,7 @@ class DocumentEditor extends React.Component {
 
   render() {
     return (
-      <div className="document-container">
+      <div className="doc-page-container">
         <div className="document-header">
           <button
             name="backbutton"

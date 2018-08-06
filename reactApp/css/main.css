@@ -167,10 +167,3 @@ h1 {
 .document-id {
   margin-left: 20px;
 }
-
-.editor-container {
-  border: 2px solid black;
-  height: 60vh;
-  overflow-y: scroll;
-  padding: 20px;
-}
