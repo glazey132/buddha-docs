@@ -1,7 +1,15 @@
-var React = require('react');
+//packages
+import React from 'react';
 import { RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
 import { Map } from 'immutable';
+
+//style assets
+import INLINE_STYLES from '../assets/inlineStyles';
+import BLOCK_TYPES from '../assets/blockTypes';
 import '../../css/Toolbar.css';
+
+//imported components
+import StyleButton from './StyleButton';
 
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(
   new Map({
