@@ -133,7 +133,6 @@ class DocumentEditor extends React.Component {
     );
     e.preventDefault();
     if (block) {
-      console.log('block looks to be true');
       this.setState({
         editorState: RichUtils.toggleBlockType(this.state.editorState, style)
       });
@@ -214,6 +213,7 @@ class DocumentEditor extends React.Component {
         break;
       default:
         this.toggleFormat(event, (style: 'times-new-roman'), (block: true));
+      //this.toggleFormat(event, 'times-new-roman', true);
     }
   }
 
@@ -463,6 +463,7 @@ class DocumentEditor extends React.Component {
             blockRenderMap={myBlockTypes}
             customStyleMap={this.state.inlineStyles}
             onChange={this.onChange}
+            spellCheck={true}
             editorState={this.state.editorState}
           />
         </div>
