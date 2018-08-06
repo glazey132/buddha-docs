@@ -8,7 +8,6 @@ import {
 } from 'draft-js';
 const { Link } = require('react-router-dom');
 import DocumentEditor from './DocumentEditor';
-import { CirclePicker } from 'react-color';
 import axios from 'axios';
 import io from 'socket.io-client';
 
