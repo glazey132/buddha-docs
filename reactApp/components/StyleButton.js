@@ -12,9 +12,17 @@ class StyleButton extends React.Component {
   }
 
   render() {
+    let color;
+    if (this.props.active) {
+      color = 'orange';
+    } else {
+      color = '#FF9800';
+    }
     return (
       <Button
+        style={{ backgroundColor: `${color}` }}
         onClick={e => this.props.onToggle(e, this.props.style)}
+        waves="orange"
         icon={`${this.props.icon}`}
       />
     );

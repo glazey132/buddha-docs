@@ -1,7 +1,4 @@
 .toolbar {
   display: flex;
-}
-
-.toolbar-col {
-  border: 1px solid red;
+  justify-content: center;
 }
