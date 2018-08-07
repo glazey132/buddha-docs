@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Register from './Register';
 import Login from './Login';
 import Home from './Home';
-import DocumentContainer from './DocumentContainer';
+import Document from './Document';
 
 class Router extends React.Component {
   constructor(props) {

@@ -12,36 +12,10 @@ import '../../css/Toolbar.css';
 //imported components
 import StyleButton from './StyleButton';
 
-const myBlockTypes = DefaultDraftBlockRenderMap.merge(
-  new Map({
-    center: {
-      wrapper: <div className="center-align" />
-    },
-    right: {
-      wrapper: <div className="right-align" />
-    }
-  })
-);
-
 class StyleToolbar extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  //format button helper
-  // formatButton({ icon, style, block }) {
-  //   return (
-  //     <RaisedButton
-  //       backgroundColor={
-  //         this.state.editorState.getCurrentInlineStyle().has(style)
-  //           ? colors.orange800
-  //           : colors.orange200
-  //       }
-  //       onMouseDown={e => this.toggleFormat(e, style, block)}
-  //       icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-  //     />
-  //   );
-  // }
 
   render() {
     return (

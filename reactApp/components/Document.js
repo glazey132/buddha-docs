@@ -152,7 +152,7 @@ class Document extends React.Component {
       <div>
         <StyleToolbar />
         <ColorDropdown />
-        <DocumentEditor
+        {/* <DocumentEditor
           props={this.props}
           loading={this.state.loading}
           title={this.state.title}
@@ -164,7 +164,7 @@ class Document extends React.Component {
           setStateFn={this.setStateFunction.bind(this)}
           exitDoc={this.exitDoc.bind(this)}
           saveFn={this.saveDocument.bind(this)}
-        />
+        /> */}
       </div>
     );
   }
