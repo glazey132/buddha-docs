@@ -460,10 +460,8 @@ class DocumentEditor extends React.Component {
           <Editor
             ref="editor"
             className="editor-page"
-            blockRenderMap={myBlockTypes}
             customStyleMap={this.state.inlineStyles}
             onChange={this.onChange}
-            spellCheck={true}
             editorState={this.state.editorState}
           />
         </div>
