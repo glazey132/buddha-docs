@@ -9,15 +9,6 @@ import {
 } from 'draft-js';
 import axios from 'axios';
 import { Row, Col } from 'react-materialize';
-// import AppBar from 'material-ui/AppBar';
-// import IconButton from 'material-ui/IconButton';
-// import NavigationClose from 'material-ui/svg-icons/navigation/close';
-// import FlatButton from 'material-ui/FlatButton';
-// import FontIcon from 'material-ui/FontIcon';
-// import RaisedButton from 'material-ui/RaisedButton';
-// import SelectField from 'material-ui/SelectField';
-// import MenuItem from 'material-ui/MenuItem';
-// import * as colors from 'material-ui/styles/colors';
 
 //import components
 import StyleToolbar from './StyleToolbar';
