@@ -71,16 +71,16 @@ class DocumentEditor extends React.Component {
         );
         this.setState({
           title: response.data.doc.title,
-          // editorState: response.data.doc.contents
-          //   ? EditorState.createWithContent(
-          //       convertFromRaw(JSON.parse(response.data.doc.contents))
-          //     )
-          //   : this.state.editorState,
-          // currentSelection: response.data.doc.editorRaw
-          //   ? EditorState.createWithContent(
-          //       convertFromRaw(JSON.parse(response.data.doc.contents))
-          //     ).getSelection()
-          //   : this.state.currentSelection,
+          editorState: response.data.doc.contents
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              )
+            : this.state.editorState,
+          currentSelection: response.data.doc.editorRaw
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              ).getSelection()
+            : this.state.currentSelection,
           isLoading: false
         });
         console.log(
@@ -171,6 +171,20 @@ class DocumentEditor extends React.Component {
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
     );
+  }
+
+  myBlockStyleFn(contentBlock) {
+    const type = contentBlock.getType();
+    switch (type) {
+      case 'right':
+        return 'right';
+      case 'center':
+        return 'center';
+      case 'left':
+        return 'left';
+      default:
+        return 'left';
+    }
   }
 
   saveDocument() {
@@ -410,6 +424,7 @@ class DocumentEditor extends React.Component {
             <Editor
               editorState={this.state.editorState}
               customStyleMap={customStyleMap}
+              blockStyleFn={this.myBlockStyleFn}
               ref="editor"
               onChange={state => this.onChange(state)}
             />
