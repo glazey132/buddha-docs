@@ -18,6 +18,17 @@ class StyleButton extends React.Component {
     } else {
       color = '#FF9800';
     }
+
+    if (this.props.icon === 'save') {
+      return (
+        <Button
+          style={{ backgroundColor: `${color}` }}
+          onClick={() => this.props.onSave()}
+          waves="orange"
+          icon={`${this.props.icon}`}
+        />
+      );
+    }
     return (
       <Button
         style={{ backgroundColor: `${color}` }}

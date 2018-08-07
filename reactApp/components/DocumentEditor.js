@@ -32,6 +32,11 @@ class DocumentEditor extends React.Component {
     super(props);
     this.state = {
       id: this.props.id,
+      title: '',
+      collaborators: [],
+      timestamp: '',
+      editorState: EditorState.createEmpty(),
+      currentSelection: SelectionState.createEmpty(),
       fontSize: 12,
       location: {
         top: 0,
@@ -43,8 +48,6 @@ class DocumentEditor extends React.Component {
       },
       display: false,
       color: 'white',
-      editorState: EditorState.createEmpty(),
-      currentSelection: SelectionState.createEmpty(),
       font: '',
       fontColor: '',
       backgroundColor: ''
@@ -58,7 +61,7 @@ class DocumentEditor extends React.Component {
     //   })
     // );
 
-    //axios get doc
+    //axios call to backend to retrieve document
     axios
       .get(
         localStorage.getItem('url') + '/findDoc/' + this.state.id,
@@ -95,6 +98,13 @@ class DocumentEditor extends React.Component {
         );
       });
   }
+
+  // createEditorStateFromStringifiedContentState(stringifedContentState) {
+  //   let contentState = JSON.parse(stringifedContentState)
+  //   contentState = convertFromRaw(contentState);
+  //   let editorState = createWithContent(contentState);
+  //   return editorState;
+  // }
 
   //lifecycle methods
   componentDidMount() {
@@ -353,6 +363,7 @@ class DocumentEditor extends React.Component {
             onToggleInlineStyle={(event, style) =>
               this.toggleInlineStyle(event, style)
             }
+            onSave={() => this.saveDoc()}
           />
         </div>
         <div className="editor-container">
