@@ -1,24 +1,48 @@
 import React from 'react';
 import { GithubPicker } from 'react-color';
-import { Dropdown, Button, NavItem } from 'react-materialize';
+import { Button } from 'react-materialize';
+import Popover from 'material-ui/Popover';
 
 class ColorDropdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pickerOpen: false
+      colorPickerOpen: false,
+      colorPickerAnchor: null
     };
   }
 
-  openColorPicker() {}
+  openColorPicker(e) {
+    this.setState({
+      colorPickerOpen: true,
+      colorPickerAnchor: e.target
+    });
+  }
 
-  closeColorPicker() {}
+  closeColorPicker() {
+    this.setState({
+      colorPickerOpen: false,
+      colorPickerAnchor: null
+    });
+  }
 
   render() {
     return (
-      // <Dropdown trigger={<Button>Drop me!</Button>}>
-      //   <GithubPicker />
-      // </Dropdown>
+      <div>
+        <Button
+          icon="format_color_text"
+          onClick={e => this.openColorPicker(e)}
+        />
+        <Popover
+          anchorEl={this.state.colorPickerAnchor}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'left', vertial: 'top' }}
+          open={this.state.colorPickerOpen}
+          onRequestClose={() => this.closeColorPicker()}
+        >
+          <GithubPicker />
+        </Popover>
+      </div>
     );
   }
 }
