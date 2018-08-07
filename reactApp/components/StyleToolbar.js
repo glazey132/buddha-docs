@@ -10,6 +10,7 @@ import BLOCK_TYPES from '../assets/blockTypes';
 import '../../css/Toolbar.css';
 
 //imported components
+import ColorDropdown from './ColorDropdown';
 import StyleButton from './StyleButton';
 
 class StyleToolbar extends React.Component {
@@ -19,7 +20,7 @@ class StyleToolbar extends React.Component {
 
   render() {
     return (
-      <Row>
+      <Row className="toolbar">
         {INLINE_STYLES.map(type => (
           <StyleButton
             key={type.style}
@@ -28,6 +29,9 @@ class StyleToolbar extends React.Component {
             onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
           />
         ))}
+        <ColorDropdown
+          onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
+        />
         {BLOCK_TYPES.map(type => (
           <StyleButton
             key={type.style}

@@ -36,7 +36,7 @@ class ColorDropdown extends React.Component {
         <Popover
           anchorEl={this.state.colorPickerAnchor}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertial: 'top' }}
+          transformOrigin={{ horizontal: 'left', vertial: 'top' }}
           open={this.state.colorPickerOpen}
           onRequestClose={() => this.closeColorPicker()}
         >

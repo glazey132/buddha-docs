@@ -17,6 +17,9 @@ import axios from 'axios';
 // import MenuItem from 'material-ui/MenuItem';
 // import * as colors from 'material-ui/styles/colors';
 
+//import components
+import StyleToolbar from './StyleToolbar';
+
 import myBlockTypes from '../assets/blockTypes';
 
 import '../../css/DocumentEditor.css';
@@ -44,13 +47,50 @@ class DocumentEditor extends React.Component {
       display: false,
       color: 'white',
       editorState: EditorState.createEmpty(),
-      inlineStyles: {},
+      currentSelection: SelectionState.createEmpty(),
       font: '',
       fontColor: '',
       backgroundColor: ''
     };
     console.log('this.props in doc editor ', this.props);
     this.onChange = editorState => this.setState({ editorState });
+
+    //axios get doc
+    axios
+      .get(
+        localStorage.getItem('url') + '/findDoc/' + this.state.id,
+        axiosConfig
+      )
+      .then(response => {
+        console.log(
+          'got a document payload on page load. response: ',
+          response.data
+        );
+        this.setState({
+          title: response.data.doc.title,
+          editorState: response.data.doc.contents
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              )
+            : this.state.editorState,
+          currentSelection: response.data.doc.editorRaw
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              ).getSelection()
+            : this.state.currentSelection,
+          isLoading: false
+        });
+        console.log(
+          'the state after pageload payload was applied: ',
+          this.state
+        );
+      })
+      .catch(function(error) {
+        console.log(
+          'There was an error while trying to retrieve the document on page load ',
+          error
+        );
+      });
   }
 
   //lifecycle methods
@@ -104,6 +144,32 @@ class DocumentEditor extends React.Component {
         });
       }
     });
+  }
+
+  saveDocument() {
+    axios
+      .post('http://localhost:3000/saveDoc/', {
+        docId: this.state.id,
+        title: this.state.title,
+        editorState: JSON.stringify(
+          convertToRaw(this.state.editorState.getCurrentContent())
+        )
+      })
+      .then(response => {
+        console.log('got response from save: ', response);
+        if (response.data.success) {
+          console.log('saved');
+        } else {
+          console.log('error saving');
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  exitDoc() {
+    this.state.socket.emit('exit');
   }
 
   //BUTTON JSX AND ASSOCIATED FUNCTIONS
@@ -457,10 +523,10 @@ class DocumentEditor extends React.Component {
         {/* </div>
         <br /> */}
         <div className="editor-container">
+          <StyleToolbar />
           <Editor
             ref="editor"
             className="editor-page"
-            customStyleMap={this.state.inlineStyles}
             onChange={this.onChange}
             editorState={this.state.editorState}
           />
