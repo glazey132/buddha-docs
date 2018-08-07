@@ -4,6 +4,7 @@ import {
   EditorState,
   RichUtils,
   convertToRaw,
+  convertFromRaw,
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
@@ -36,6 +37,7 @@ class DocumentEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: this.props.id,
       fontSize: 12,
       location: {
         top: 0,
@@ -53,8 +55,6 @@ class DocumentEditor extends React.Component {
       fontColor: '',
       backgroundColor: ''
     };
-    console.log('this.props in doc editor ', this.props);
-    this.onChange = editorState => this.setState({ editorState });
 
     //axios get doc
     axios
@@ -69,16 +69,16 @@ class DocumentEditor extends React.Component {
         );
         this.setState({
           title: response.data.doc.title,
-          editorState: response.data.doc.contents
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              )
-            : this.state.editorState,
-          currentSelection: response.data.doc.editorRaw
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              ).getSelection()
-            : this.state.currentSelection,
+          // editorState: response.data.doc.contents
+          //   ? EditorState.createWithContent(
+          //       convertFromRaw(JSON.parse(response.data.doc.contents))
+          //     )
+          //   : this.state.editorState,
+          // currentSelection: response.data.doc.editorRaw
+          //   ? EditorState.createWithContent(
+          //       convertFromRaw(JSON.parse(response.data.doc.contents))
+          //     ).getSelection()
+          //   : this.state.currentSelection,
           isLoading: false
         });
         console.log(
@@ -97,53 +97,59 @@ class DocumentEditor extends React.Component {
   //lifecycle methods
   componentDidMount() {
     console.log('compdidmount here is this.props ', this.props);
-    this.props.socket.on('aftercolor', obj => {
-      let selectionState = SelectionState.createEmpty();
-      selectionState = selectionState.merge({
-        anchorOffset: obj.anchorOffset,
-        focusOffset: obj.focusOffset,
-        focusKey: obj.focusKey,
-        anchorKey: obj.anchorKey,
-        isBackward: obj.isBackward
-      });
-      const originalSelection = this.props.currentSelection;
-      this.props.setStateFn(
-        EditorState.forceSelection(this.props.editorState, selectionState)
-      );
-      const coords = window
-        .getSelection()
-        .getRangeAt(0)
-        .getBoundingClientRect();
-      this.props.setStateFn(
-        EditorState.forceSelection(this.props.editorState, originalSelection)
-      );
-      if (obj.isCollapsed) {
-        this.setState({
-          location: {
-            top: coords.top,
-            bottom: coords.bottom,
-            left: coords.left,
-            right: coords.right,
-            height: coords.height,
-            width: coords.height / 16
-          },
-          color: obj.color,
-          display: true
-        });
-      } else {
-        this.setState({
-          location: {
-            top: coords.top,
-            bottom: coords.bottom,
-            left: coords.left,
-            right: coords.right,
-            height: coords.height,
-            width: coords.width
-          },
-          color: obj.color,
-          display: true
-        });
-      }
+    // this.props.socket.on('aftercolor', obj => {
+    //   let selectionState = SelectionState.createEmpty();
+    //   selectionState = selectionState.merge({
+    //     anchorOffset: obj.anchorOffset,
+    //     focusOffset: obj.focusOffset,
+    //     focusKey: obj.focusKey,
+    //     anchorKey: obj.anchorKey,
+    //     isBackward: obj.isBackward
+    //   });
+    //   const originalSelection = this.props.currentSelection;
+    //   this.props.setStateFn(
+    //     EditorState.forceSelection(this.props.editorState, selectionState)
+    //   );
+    //   const coords = window
+    //     .getSelection()
+    //     .getRangeAt(0)
+    //     .getBoundingClientRect();
+    //   this.props.setStateFn(
+    //     EditorState.forceSelection(this.props.editorState, originalSelection)
+    //   );
+    //   if (obj.isCollapsed) {
+    //     this.setState({
+    //       location: {
+    //         top: coords.top,
+    //         bottom: coords.bottom,
+    //         left: coords.left,
+    //         right: coords.right,
+    //         height: coords.height,
+    //         width: coords.height / 16
+    //       },
+    //       color: obj.color,
+    //       display: true
+    //     });
+    //   } else {
+    //     this.setState({
+    //       location: {
+    //         top: coords.top,
+    //         bottom: coords.bottom,
+    //         left: coords.left,
+    //         right: coords.right,
+    //         height: coords.height,
+    //         width: coords.width
+    //       },
+    //       color: obj.color,
+    //       display: true
+    //     });
+    //   }
+    // });
+  }
+
+  onChange(editorState) {
+    this.setState({
+      editorState
     });
   }
 
@@ -396,14 +402,17 @@ class DocumentEditor extends React.Component {
           </h6>
         </div>
         <div>
-          <StyleToolbar />
+          <StyleToolbar
+            editorState={this.state.editorState}
+            id={this.state.id}
+          />
         </div>
         <div className="editor-container">
           <div className="editor-page">
             <Editor
-              ref="editor"
-              onChange={this.onChange}
               editorState={this.state.editorState}
+              ref="editor"
+              onChange={state => this.onChange(state)}
             />
           </div>
         </div>

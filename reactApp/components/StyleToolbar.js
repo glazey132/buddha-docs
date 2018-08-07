@@ -23,7 +23,9 @@ class StyleToolbar extends React.Component {
       <Row className="toolbar">
         {INLINE_STYLES.map(type => (
           <StyleButton
-            className="toolbar-button"
+            active={this.props.editorState
+              .getCurrentInlineStyle()
+              .has(type.style)}
             key={type.style}
             style={type.style}
             icon={type.icon}
@@ -37,6 +39,9 @@ class StyleToolbar extends React.Component {
         {BLOCK_TYPES.map(type => (
           <StyleButton
             className="toolbar-button"
+            active={this.props.editorState
+              .getCurrentInlineStyle()
+              .has(type.style)}
             key={type.style}
             style={type.style}
             icon={type.icon}
