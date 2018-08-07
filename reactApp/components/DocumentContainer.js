@@ -9,6 +9,7 @@ import {
 import Link from 'react-router-dom';
 import DocumentEditor from './DocumentEditor';
 import StyleToolbar from './StyleToolbar';
+import ColorDropdown from './ColorDropdown';
 import axios from 'axios';
 import io from 'socket.io-client';
 
@@ -150,6 +151,7 @@ class DocumentContainer extends React.Component {
     return (
       <div>
         <StyleToolbar />
+        {/* <ColorDropdown /> */}
         <DocumentEditor
           props={this.props}
           loading={this.state.loading}
