@@ -1,0 +1,10 @@
+.doc-page-container {
+  background-image: url('https://thumbs.gfycat.com/FeistyBackHapuku-size_restricted.gif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 5em;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

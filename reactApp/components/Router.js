@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Register from './Register';
 import Login from './Login';
 import Home from './Home';
-import DocumentContainer from './DocumentContainer';
+import DocumentPage from './DocumentPage';
 
 class Router extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class Router extends React.Component {
         <Route path={'/register'} exact component={Register} />
         <Route path={'/login'} exact component={Login} />
         <Route path={'/home/:userid'} exact component={Home} />
-        <Route path={'/document/:docid'} exact component={DocumentContainer} />
+        <Route path={'/document/:docid'} exact component={DocumentPage} />
       </div>
     );
   }

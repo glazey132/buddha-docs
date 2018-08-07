@@ -1,6 +1,7 @@
 //packages
 const React = require('react');
 import { Button } from 'react-materialize';
+import '../../css/StyleButton.css';
 
 class StyleButton extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ class StyleButton extends React.Component {
     return (
       <Button
         onClick={e => this.props.onToggle(e, this.props.style)}
-        waves="light"
         icon={`${this.props.icon}`}
       />
     );

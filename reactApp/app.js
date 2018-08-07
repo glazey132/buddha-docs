@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Router from './components/Router';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 require('../css/Draft.css');
 

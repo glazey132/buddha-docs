@@ -7,15 +7,19 @@ import {
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import * as colors from 'material-ui/styles/colors';
+import { Row, Col } from 'react-materialize';
+// import AppBar from 'material-ui/AppBar';
+// import IconButton from 'material-ui/IconButton';
+// import NavigationClose from 'material-ui/svg-icons/navigation/close';
+// import FlatButton from 'material-ui/FlatButton';
+// import FontIcon from 'material-ui/FontIcon';
+// import RaisedButton from 'material-ui/RaisedButton';
+// import SelectField from 'material-ui/SelectField';
+// import MenuItem from 'material-ui/MenuItem';
+// import * as colors from 'material-ui/styles/colors';
+
+//import components
+import StyleToolbar from './StyleToolbar';
 
 import myBlockTypes from '../assets/blockTypes';
 
@@ -44,13 +48,50 @@ class DocumentEditor extends React.Component {
       display: false,
       color: 'white',
       editorState: EditorState.createEmpty(),
-      inlineStyles: {},
+      currentSelection: SelectionState.createEmpty(),
       font: '',
       fontColor: '',
       backgroundColor: ''
     };
     console.log('this.props in doc editor ', this.props);
     this.onChange = editorState => this.setState({ editorState });
+
+    //axios get doc
+    axios
+      .get(
+        localStorage.getItem('url') + '/findDoc/' + this.state.id,
+        axiosConfig
+      )
+      .then(response => {
+        console.log(
+          'got a document payload on page load. response: ',
+          response.data
+        );
+        this.setState({
+          title: response.data.doc.title,
+          editorState: response.data.doc.contents
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              )
+            : this.state.editorState,
+          currentSelection: response.data.doc.editorRaw
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              ).getSelection()
+            : this.state.currentSelection,
+          isLoading: false
+        });
+        console.log(
+          'the state after pageload payload was applied: ',
+          this.state
+        );
+      })
+      .catch(function(error) {
+        console.log(
+          'There was an error while trying to retrieve the document on page load ',
+          error
+        );
+      });
   }
 
   //lifecycle methods
@@ -106,22 +147,48 @@ class DocumentEditor extends React.Component {
     });
   }
 
+  saveDocument() {
+    axios
+      .post('http://localhost:3000/saveDoc/', {
+        docId: this.state.id,
+        title: this.state.title,
+        editorState: JSON.stringify(
+          convertToRaw(this.state.editorState.getCurrentContent())
+        )
+      })
+      .then(response => {
+        console.log('got response from save: ', response);
+        if (response.data.success) {
+          console.log('saved');
+        } else {
+          console.log('error saving');
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  exitDoc() {
+    this.state.socket.emit('exit');
+  }
+
   //BUTTON JSX AND ASSOCIATED FUNCTIONS
 
   //toolbar button jsx
-  formatButton({ icon, style, block }) {
-    return (
-      <RaisedButton
-        backgroundColor={
-          this.state.editorState.getCurrentInlineStyle().has(style)
-            ? colors.orange800
-            : colors.orange200
-        }
-        onMouseDown={e => this.toggleFormat(e, style, block)}
-        icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-      />
-    );
-  }
+  // formatButton({ icon, style, block }) {
+  //   return (
+  //     <RaisedButton
+  //       backgroundColor={
+  //         this.state.editorState.getCurrentInlineStyle().has(style)
+  //           ? colors.orange800
+  //           : colors.orange200
+  //       }
+  //       onMouseDown={e => this.toggleFormat(e, style, block)}
+  //       icon={<FontIcon className="material-icons">{icon}</FontIcon>}
+  //     />
+  //   );
+  // }
 
   //toolbar button toggle function
   toggleFormat(e, style, block) {
@@ -144,15 +211,15 @@ class DocumentEditor extends React.Component {
   }
 
   //save button jsx
-  saveButton() {
-    return (
-      <RaisedButton
-        backgroundColor={colors.orange200}
-        onMouseDown={() => this.saveDoc()}
-        icon={<FontIcon className="material-icons">beenhere</FontIcon>}
-      />
-    );
-  }
+  // saveButton() {
+  //   return (
+  //     <RaisedButton
+  //       backgroundColor={colors.orange200}
+  //       onMouseDown={() => this.saveDoc()}
+  //       icon={<FontIcon className="material-icons">beenhere</FontIcon>}
+  //     />
+  //   );
+  // }
 
   //save document to db function
   saveDoc() {
@@ -315,7 +382,7 @@ class DocumentEditor extends React.Component {
 
   render() {
     return (
-      <div className="doc-page-container">
+      <div>
         <div className="document-header">
           <button
             name="backbutton"
@@ -328,142 +395,17 @@ class DocumentEditor extends React.Component {
             Share this ID to Collab: {this.props.docId}
           </h6>
         </div>
-        <AppBar
-          title={this.props.title}
-          iconElementLeft={
-            <IconButton>
-              <NavigationClose />
-            </IconButton>
-          }
-          iconElementRight={<FlatButton label="Save" />}
-        />
-        <div className="toolbar">
-          <div style={{ display: 'flex' }}>
-            <SelectField
-              autoWidth={true}
-              floatingLabelText="font"
-              floatingLabelStyle={{ margin: '5px' }}
-              value={this.state.font}
-              onChange={(event, index, value) =>
-                this._onFont(event, index, value)
-              }
-              style={{
-                width: '140px',
-                margin: '5px',
-                textAlign: 'left',
-                flex: 1
-              }}
-            >
-              <MenuItem
-                value={'times new roman'}
-                primaryText="Times New Roman"
-              />
-              <MenuItem value={'kavivanar'} primaryText="Kavivanar" />
-              <MenuItem value={'crimsontext'} primaryText="Crimson Text" />
-              <MenuItem value={'bungeeinline'} primaryText="Bungee Inline" />
-            </SelectField>
-            <br />
-            <SelectField
-              autoWidth={true}
-              floatingLabelText="font size"
-              value={this.state.fontSize}
-              onChange={(event, index, value) =>
-                this._onFontSize(event, index, value)
-              }
-              style={{
-                width: '140px',
-                margin: '5px',
-                textAlign: 'left',
-                flex: 1
-              }}
-            >
-              <MenuItem value={12} primaryText="12" />
-              <MenuItem value={24} primaryText="24" />
-              <MenuItem value={36} primaryText="36" />
-              <MenuItem value={48} primaryText="48" />
-              <MenuItem value={60} primaryText="60" />
-              <MenuItem value={72} primaryText="72" />
-            </SelectField>
-            <br />
-            <SelectField
-              autoWidth={true}
-              floatingLabelText="font color"
-              value={this.state.fontColor}
-              onChange={(event, index, value) =>
-                this._onFontColor(event, index, value)
-              }
-              style={{
-                width: '140px',
-                margin: '5px',
-                textAlign: 'left',
-                flex: 1
-              }}
-            >
-              <MenuItem value={'red'} primaryText="red" />
-              <MenuItem value={'orange'} primaryText="orange" />
-              <MenuItem value={'yellow'} primaryText="yellow" />
-              <MenuItem value={'green'} primaryText="green" />
-              <MenuItem value={'blue'} primaryText="blue" />
-              <MenuItem value={'purple'} primaryText="purple" />
-              <MenuItem value={'black'} primaryText="black" />
-            </SelectField>
-            <br />
-            <SelectField
-              autoWidth={true}
-              floatingLabelText="background color"
-              value={this.state.backgroundColor}
-              onChange={(event, index, value) =>
-                this._onFontBackgroundColor(event, index, value)
-              }
-              style={{
-                width: '140px',
-                margin: '5px',
-                textAlign: 'left',
-                flex: 1
-              }}
-            >
-              <MenuItem value={'orange'} primaryText="orange" />
-              <MenuItem value={'yellow'} primaryText="yellow" />
-              <MenuItem value={'green'} primaryText="green" />
-              <MenuItem value={'purple'} primaryText="purple" />
-              <MenuItem value={'white'} primaryText="white" />
-            </SelectField>
-            <br />
-          </div>
-          {this.formatButton({ icon: 'format_bold', style: 'BOLD' })}
-          {this.formatButton({ icon: 'format_italic', style: 'ITALIC' })}
-          {this.formatButton({ icon: 'format_underline', style: 'UNDERLINE' })}
-          {this.formatButton({
-            icon: 'format_list_numbered',
-            style: 'ordered-list-item',
-            block: true
-          })}
-          {this.formatButton({
-            icon: 'format_align_left',
-            style: 'left',
-            block: true
-          })}
-          {this.formatButton({
-            icon: 'format_align_center',
-            style: 'center',
-            block: true
-          })}
-          {this.formatButton({
-            icon: 'format_align_right',
-            style: 'right',
-            block: true
-          })}
-          {this.saveButton()}
+        <div>
+          <StyleToolbar />
         </div>
-        <br />
         <div className="editor-container">
-          <Editor
-            ref="editor"
-            className="editor-page"
-            customStyleMap={this.state.inlineStyles}
-            onChange={this.onChange}
-            editorState={this.state.editorState}
-          />
+          <div className="editor-page">
+            <Editor
+              ref="editor"
+              onChange={this.onChange}
+              editorState={this.state.editorState}
+            />
+          </div>
         </div>
       </div>
     );
