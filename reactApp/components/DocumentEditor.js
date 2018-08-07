@@ -3,6 +3,7 @@ import {
   Editor,
   EditorState,
   RichUtils,
+  DefaultDraftBlockRenderMap,
   convertToRaw,
   convertFromRaw,
   SelectionState
@@ -13,6 +14,8 @@ import { Row, Col } from 'react-materialize';
 //import components
 import StyleToolbar from './StyleToolbar';
 
+//assets
+import customStyleMap from '../assets/customStyleMap';
 import myBlockTypes from '../assets/blockTypes';
 
 import '../../css/DocumentEditor.css';
@@ -46,6 +49,14 @@ class DocumentEditor extends React.Component {
       fontColor: '',
       backgroundColor: ''
     };
+
+    // this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
+    //   new Map({
+    //     right: {},
+    //     center: {},
+    //     left: {}
+    //   })
+    // );
 
     //axios get doc
     axios
@@ -144,6 +155,20 @@ class DocumentEditor extends React.Component {
     });
   }
 
+  toggleBlockType(event, blockType) {
+    event.preventDefautl();
+
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
+  }
+
+  toggleInlineStyle(event, inlineStyle) {
+    event.preventDefault();
+
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
+    );
+  }
+
   saveDocument() {
     axios
       .post('http://localhost:3000/saveDoc/', {
@@ -170,23 +195,6 @@ class DocumentEditor extends React.Component {
     this.state.socket.emit('exit');
   }
 
-  //BUTTON JSX AND ASSOCIATED FUNCTIONS
-
-  //toolbar button jsx
-  // formatButton({ icon, style, block }) {
-  //   return (
-  //     <RaisedButton
-  //       backgroundColor={
-  //         this.state.editorState.getCurrentInlineStyle().has(style)
-  //           ? colors.orange800
-  //           : colors.orange200
-  //       }
-  //       onMouseDown={e => this.toggleFormat(e, style, block)}
-  //       icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-  //     />
-  //   );
-  // }
-
   //toolbar button toggle function
   toggleFormat(e, style, block) {
     console.log(
@@ -206,17 +214,6 @@ class DocumentEditor extends React.Component {
       });
     }
   }
-
-  //save button jsx
-  // saveButton() {
-  //   return (
-  //     <RaisedButton
-  //       backgroundColor={colors.orange200}
-  //       onMouseDown={() => this.saveDoc()}
-  //       icon={<FontIcon className="material-icons">beenhere</FontIcon>}
-  //     />
-  //   );
-  // }
 
   //save document to db function
   saveDoc() {
@@ -402,6 +399,7 @@ class DocumentEditor extends React.Component {
           <div className="editor-page">
             <Editor
               editorState={this.state.editorState}
+              customStyleMap={customStyleMap}
               ref="editor"
               onChange={state => this.onChange(state)}
             />

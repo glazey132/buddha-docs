@@ -20,44 +20,7 @@ class DocumentPage extends React.Component {
       console.log('connected to web sockets!');
       this.state.socket.emit('join', this.state.id);
     });
-
-    // this.onChange = editorState => {
-    //   this.state.socket.emit(
-    //     'typing',
-    //     JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-    //   );
-    //   this.state.socket.emit('selection', {
-    //     anchorOffset: editorState.getSelection().getAnchorOffset(),
-    //     focusOffset: editorState.getSelection().getFocusOffset(),
-    //     anchorKey: editorState.getSelection().getAnchorKey(),
-    //     focusKey: editorState.getSelection().getFocusKey(),
-    //     isCollapsed: editorState.getSelection().isCollapsed(),
-    //     isBackward: editorState.getSelection().getIsBackward()
-    //   });
-    //   this.setState({
-    //     editorState,
-    //     currentSelection: editorState.getSelection()
-    //   });
-    // };
   }
-  //
-  // setStateFunction(toSet) {
-  //   this.setState({
-  //     editorState: toSet
-  //   });
-  // }
-  //
-  // //lifecycle
-  // componentWillMount() {
-  //   this.state.socket.on('changestate', newState => {
-  //     this.setState({
-  //       editorState: EditorState.forceSelection(
-  //         EditorState.createWithContent(convertFromRaw(JSON.parse(newState))),
-  //         this.state.currentSelection
-  //       )
-  //     });
-  //   });
-  // }
 
   render() {
     return (
