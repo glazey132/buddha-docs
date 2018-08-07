@@ -349,9 +349,6 @@ class DocumentEditor extends React.Component {
           >
             Back to Documents
           </button>
-          <h6 className="document-id">
-            Share this ID to Collab: {this.props.docId}
-          </h6>
         </div>
         <div>
           <StyleToolbar

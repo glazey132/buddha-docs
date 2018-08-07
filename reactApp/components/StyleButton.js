@@ -28,6 +28,15 @@ class StyleButton extends React.Component {
           icon={`${this.props.icon}`}
         />
       );
+    } else if (this.props.icon === 'screen_share') {
+      return (
+        <Button
+          style={{ backgroundColor: `${color}` }}
+          onClick={() => this.props.onShare()}
+          waves="orange"
+          icon={`${this.props.icon}`}
+        />
+      );
     }
     return (
       <Button
