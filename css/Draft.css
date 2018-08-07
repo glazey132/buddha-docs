@@ -47,9 +47,14 @@ html {
 }
 
 .back-to-documents-button {
-  border: 0.5px solid black;
-  background-color: lightgray;
+  background-color: orange;
   margin-bottom: 20px;
+  color: white;
+  text-align: center;
+  font-size: 1.3rem;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0.5px 1px black;
 }
 
 .logout-button {

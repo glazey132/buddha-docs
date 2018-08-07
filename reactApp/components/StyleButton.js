@@ -12,28 +12,29 @@ class StyleButton extends React.Component {
   }
 
   render() {
+    console.log('this.props in styleButton ', this.props);
     let color;
-    if (this.props.active) {
-      color = 'orange';
-    } else {
+    if (this.props.active === true) {
       color = '#FF9800';
+    } else {
+      color = '#26a69a';
     }
 
     if (this.props.icon === 'save') {
       return (
         <Button
-          style={{ backgroundColor: `${color}` }}
+          style={{ backgroundColor: '#26a69a' }}
           onClick={() => this.props.onSave()}
-          waves="orange"
+          waves="light"
           icon={`${this.props.icon}`}
         />
       );
     } else if (this.props.icon === 'screen_share') {
       return (
         <Button
-          style={{ backgroundColor: `${color}` }}
+          style={{ backgroundColor: '#26a69a' }}
           onClick={() => this.props.onShare()}
-          waves="orange"
+          waves="light"
           icon={`${this.props.icon}`}
         />
       );
