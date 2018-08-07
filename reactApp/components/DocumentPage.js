@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-  Editor,
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-  SelectionState
-} from 'draft-js';
-import Link from 'react-router-dom';
 import DocumentEditor from './DocumentEditor';
 import io from 'socket.io-client';
 
-class Document extends React.Component {
+class DocumentPage extends React.Component {
   constructor(props) {
     super(props);
     console.log('doc containers props ', props);
@@ -80,4 +72,4 @@ class Document extends React.Component {
   }
 }
 
-export default Document;
+export default DocumentPage;
