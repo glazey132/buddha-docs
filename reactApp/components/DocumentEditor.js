@@ -197,26 +197,11 @@ class DocumentEditor extends React.Component {
     }
   }
 
-  saveDocument() {
-    axios
-      .post('http://localhost:3000/saveDoc/', {
-        docId: this.state.id,
-        title: this.state.title,
-        editorState: JSON.stringify(
-          convertToRaw(this.state.editorState.getCurrentContent())
-        )
-      })
-      .then(response => {
-        console.log('got response from save: ', response);
-        if (response.data.success) {
-          console.log('saved');
-        } else {
-          console.log('error saving');
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+  onTabKey(event) {
+    console.log('there was a tab event! ', event);
+    event.preventDefault();
+    const maxDepth = 4;
+    this.onChange(RichUtils.onTab(event, this.state.editorState, maxDepth));
   }
 
   exitDoc() {
@@ -371,6 +356,7 @@ class DocumentEditor extends React.Component {
               blockStyleFn={this.myBlockStyleFn}
               ref="editor"
               onChange={state => this.onChange(state)}
+              spellCheck={true}
             />
           </div>
         </div>
