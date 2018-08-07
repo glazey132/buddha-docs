@@ -156,13 +156,17 @@ class DocumentEditor extends React.Component {
   }
 
   toggleBlockType(event, blockType) {
-    event.preventDefautl();
+    if (event) {
+      event.preventDefault();
+    }
 
     this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
   }
 
   toggleInlineStyle(event, inlineStyle) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
 
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
@@ -393,6 +397,12 @@ class DocumentEditor extends React.Component {
           <StyleToolbar
             editorState={this.state.editorState}
             id={this.state.id}
+            onToggleBlockType={(event, style) =>
+              this.toggleBlockType(event, style)
+            }
+            onToggleInlineStyle={(event, style) =>
+              this.toggleInlineStyle(event, style)
+            }
           />
         </div>
         <div className="editor-container">
