@@ -29,19 +29,19 @@ class StyleToolbar extends React.Component {
   }
 
   //format button helper
-  formatButton({ icon, style, block }) {
-    return (
-      <RaisedButton
-        backgroundColor={
-          this.state.editorState.getCurrentInlineStyle().has(style)
-            ? colors.orange800
-            : colors.orange200
-        }
-        onMouseDown={e => this.toggleFormat(e, style, block)}
-        icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-      />
-    );
-  }
+  // formatButton({ icon, style, block }) {
+  //   return (
+  //     <RaisedButton
+  //       backgroundColor={
+  //         this.state.editorState.getCurrentInlineStyle().has(style)
+  //           ? colors.orange800
+  //           : colors.orange200
+  //       }
+  //       onMouseDown={e => this.toggleFormat(e, style, block)}
+  //       icon={<FontIcon className="material-icons">{icon}</FontIcon>}
+  //     />
+  //   );
+  // }
 
   render() {
     return (

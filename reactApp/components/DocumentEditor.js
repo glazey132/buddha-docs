@@ -7,15 +7,15 @@ import {
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import * as colors from 'material-ui/styles/colors';
+// import AppBar from 'material-ui/AppBar';
+// import IconButton from 'material-ui/IconButton';
+// import NavigationClose from 'material-ui/svg-icons/navigation/close';
+// import FlatButton from 'material-ui/FlatButton';
+// import FontIcon from 'material-ui/FontIcon';
+// import RaisedButton from 'material-ui/RaisedButton';
+// import SelectField from 'material-ui/SelectField';
+// import MenuItem from 'material-ui/MenuItem';
+// import * as colors from 'material-ui/styles/colors';
 
 import myBlockTypes from '../assets/blockTypes';
 
@@ -109,19 +109,19 @@ class DocumentEditor extends React.Component {
   //BUTTON JSX AND ASSOCIATED FUNCTIONS
 
   //toolbar button jsx
-  formatButton({ icon, style, block }) {
-    return (
-      <RaisedButton
-        backgroundColor={
-          this.state.editorState.getCurrentInlineStyle().has(style)
-            ? colors.orange800
-            : colors.orange200
-        }
-        onMouseDown={e => this.toggleFormat(e, style, block)}
-        icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-      />
-    );
-  }
+  // formatButton({ icon, style, block }) {
+  //   return (
+  //     <RaisedButton
+  //       backgroundColor={
+  //         this.state.editorState.getCurrentInlineStyle().has(style)
+  //           ? colors.orange800
+  //           : colors.orange200
+  //       }
+  //       onMouseDown={e => this.toggleFormat(e, style, block)}
+  //       icon={<FontIcon className="material-icons">{icon}</FontIcon>}
+  //     />
+  //   );
+  // }
 
   //toolbar button toggle function
   toggleFormat(e, style, block) {
@@ -144,15 +144,15 @@ class DocumentEditor extends React.Component {
   }
 
   //save button jsx
-  saveButton() {
-    return (
-      <RaisedButton
-        backgroundColor={colors.orange200}
-        onMouseDown={() => this.saveDoc()}
-        icon={<FontIcon className="material-icons">beenhere</FontIcon>}
-      />
-    );
-  }
+  // saveButton() {
+  //   return (
+  //     <RaisedButton
+  //       backgroundColor={colors.orange200}
+  //       onMouseDown={() => this.saveDoc()}
+  //       icon={<FontIcon className="material-icons">beenhere</FontIcon>}
+  //     />
+  //   );
+  // }
 
   //save document to db function
   saveDoc() {
@@ -328,7 +328,7 @@ class DocumentEditor extends React.Component {
             Share this ID to Collab: {this.props.docId}
           </h6>
         </div>
-        <AppBar
+        {/* <AppBar
           title={this.props.title}
           iconElementLeft={
             <IconButton>
@@ -336,8 +336,8 @@ class DocumentEditor extends React.Component {
             </IconButton>
           }
           iconElementRight={<FlatButton label="Save" />}
-        />
-        <div className="toolbar">
+        /> */}
+        {/* <div className="toolbar">
           <div style={{ display: 'flex' }}>
             <SelectField
               autoWidth={true}
@@ -429,8 +429,8 @@ class DocumentEditor extends React.Component {
               <MenuItem value={'white'} primaryText="white" />
             </SelectField>
             <br />
-          </div>
-          {this.formatButton({ icon: 'format_bold', style: 'BOLD' })}
+          </div> */}
+        {/* {this.formatButton({ icon: 'format_bold', style: 'BOLD' })}
           {this.formatButton({ icon: 'format_italic', style: 'ITALIC' })}
           {this.formatButton({ icon: 'format_underline', style: 'UNDERLINE' })}
           {this.formatButton({
@@ -453,9 +453,9 @@ class DocumentEditor extends React.Component {
             style: 'right',
             block: true
           })}
-          {this.saveButton()}
-        </div>
-        <br />
+          {this.saveButton()} */}
+        {/* </div>
+        <br /> */}
         <div className="editor-container">
           <Editor
             ref="editor"

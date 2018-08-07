@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Router from './components/Router';
 
@@ -9,9 +8,7 @@ require('../css/Draft.css');
 
 ReactDOM.render(
   <BrowserRouter>
-    <MuiThemeProvider>
-      <Route path={'/'} component={Router} />
-    </MuiThemeProvider>
+    <Route path={'/'} component={Router} />
   </BrowserRouter>,
   document.getElementById('root')
 );

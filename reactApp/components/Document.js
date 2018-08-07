@@ -20,7 +20,7 @@ const axiosConfig = {
   }
 };
 
-class DocumentContainer extends React.Component {
+class Document extends React.Component {
   constructor(props) {
     super(props);
     console.log('doc containers props ', props);
@@ -151,7 +151,7 @@ class DocumentContainer extends React.Component {
     return (
       <div>
         <StyleToolbar />
-        {/* <ColorDropdown /> */}
+        <ColorDropdown />
         <DocumentEditor
           props={this.props}
           loading={this.state.loading}
@@ -170,4 +170,4 @@ class DocumentContainer extends React.Component {
   }
 }
 
-export default DocumentContainer;
+export default Document;
