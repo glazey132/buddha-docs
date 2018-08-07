@@ -255,8 +255,8 @@ class DocumentEditor extends React.Component {
       .post(
         localStorage.getItem('url') + '/saveDoc/',
         {
-          docid: this.props.docId,
-          title: this.props.title,
+          docid: this.state.id,
+          title: this.state.title,
           contents: rawJson
         },
         axiosConfig

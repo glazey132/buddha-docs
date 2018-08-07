@@ -60,27 +60,26 @@ class Home extends React.Component {
       .catch(error => console.log(error));
   }
 
-  async componentDidMount() {
-    try {
-      let resp = await axios
-        .get(
-          localStorage.getItem('url') +
-            '/getAllDocs/' +
-            this.props.match.params.userid,
-          axiosConfig
-        )
-        .then(resp => {
-          console.log('awaited response in comp did mount of home ', resp);
-          this.setState({
-            docs: resp.data.docs,
-            username: resp.data.username,
-            userid: resp.data.userid,
-            loading: false
-          });
+  componentDidMount() {
+    axios
+      .get(
+        localStorage.getItem('url') +
+          '/getAllDocs/' +
+          this.props.match.params.userid,
+        axiosConfig
+      )
+      .then(resp => {
+        console.log('awaited response in comp did mount of home ', resp);
+        this.setState({
+          docs: resp.data.docs,
+          username: resp.data.username,
+          userid: resp.data.userid,
+          loading: false
         });
-    } catch (e) {
-      console.log(e);
-    }
+      })
+      .catch(function(error) {
+        console.log('Error loading documents in home component: ', error);
+      });
   }
 
   render() {
