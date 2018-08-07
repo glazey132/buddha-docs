@@ -1,7 +1,7 @@
 import React from 'react';
 import DocumentEditor from './DocumentEditor';
 import io from 'socket.io-client';
-
+import '../../css/DocumentPage.css';
 class DocumentPage extends React.Component {
   constructor(props) {
     super(props);
@@ -61,7 +61,7 @@ class DocumentPage extends React.Component {
 
   render() {
     return (
-      <div className="editor-container">
+      <div className="doc-page-container">
         <DocumentEditor
           id={this.state.id}
           props={this.props}

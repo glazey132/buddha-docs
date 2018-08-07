@@ -23,6 +23,7 @@ class StyleToolbar extends React.Component {
       <Row className="toolbar">
         {INLINE_STYLES.map(type => (
           <StyleButton
+            className="toolbar-button"
             key={type.style}
             style={type.style}
             icon={type.icon}
@@ -30,10 +31,12 @@ class StyleToolbar extends React.Component {
           />
         ))}
         <ColorDropdown
+          className="toolbar-button"
           onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
         />
         {BLOCK_TYPES.map(type => (
           <StyleButton
+            className="toolbar-button"
             key={type.style}
             style={type.style}
             icon={type.icon}

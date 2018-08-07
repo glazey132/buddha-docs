@@ -65,12 +65,17 @@ html {
 }
 
 .editor-container {
-  border: 2px solid black;
+  margin: 0 auto;
+  border: 2px solid crimson;
   overflow-y: scroll;
   padding: 20px;
   background: azure;
-  height: 600px;
+  height: 800px;
   min-width: 400px;
   width: 600px;
-  align-self: center;
+}
+
+.editor-page {
+  margin: 0.5em;
+  height: 100%;
 }

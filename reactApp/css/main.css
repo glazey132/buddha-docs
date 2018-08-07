@@ -167,3 +167,9 @@ h1 {
 .document-id {
   margin-left: 20px;
 }
+
+.editor-slate {
+  border: 1px solid crimson;
+  background: black;
+  height: 90%;
+}
