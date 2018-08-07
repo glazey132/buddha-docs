@@ -12,7 +12,6 @@ class StyleButton extends React.Component {
   }
 
   render() {
-    console.log('this.props in styleButton ', this.props);
     let color;
     if (this.props.active === true) {
       color = '#FF9800';
@@ -38,15 +37,16 @@ class StyleButton extends React.Component {
           icon={`${this.props.icon}`}
         />
       );
+    } else {
+      return (
+        <Button
+          style={{ backgroundColor: `${color}` }}
+          onClick={e => this.props.onToggle(e, this.props.style)}
+          waves="orange"
+          icon={`${this.props.icon}`}
+        />
+      );
     }
-    return (
-      <Button
-        style={{ backgroundColor: `${color}` }}
-        onClick={e => this.props.onToggle(e, this.props.style)}
-        waves="orange"
-        icon={`${this.props.icon}`}
-      />
-    );
   }
 }
 
