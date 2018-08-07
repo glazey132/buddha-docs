@@ -2,6 +2,7 @@
 import React from 'react';
 import { RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
 import { Map } from 'immutable';
+import { Row, Col } from 'react-materialize';
 
 //style assets
 import INLINE_STYLES from '../assets/inlineStyles';
@@ -44,39 +45,24 @@ class StyleToolbar extends React.Component {
 
   render() {
     return (
-      <div className="toolbar">
-        {this.formatButton({ icon: 'format_bold', style: 'BOLD' })}
-        {this.formatButton({ icon: 'format_italic', style: 'ITALIC' })}
-        {this.formatButton({ icon: 'format_underline', style: 'UNDERLINE' })}
-        {this.colorPicker()}
-        {this.formatButton({
-          icon: 'format_list_numbered',
-          style: 'ordered-list-item',
-          block: true
-        })}
-        {this.formatButton({
-          icon: 'format_align_left',
-          style: 'unstyled',
-          block: true
-        })}
-        {this.formatButton({
-          icon: 'format_align_center',
-          style: 'center',
-          block: true
-        })}
-        {this.formatButton({
-          icon: 'format_align_right',
-          style: 'right',
-          block: true
-        })}
-        {this.formatButton({
-          icon: 'format_align_right',
-          style: 'right',
-          block: true
-        })}
-        {this.increaseFontSize(false)}
-        {this.increaseFontSize(true)}
-      </div>
+      <Row>
+        {INLINE_STYLES.map(type => (
+          <StyleButton
+            key={type.style}
+            style={type.style}
+            icon={type.icon}
+            onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
+          />
+        ))}
+        {BLOCK_TYPES.map(type => (
+          <StyleButton
+            key={type.style}
+            style={type.style}
+            icon={type.icon}
+            onToggle={(e, style) => this.props.onToggleBlockType(e, style)}
+          />
+        ))}
+      </Row>
     );
   }
 }

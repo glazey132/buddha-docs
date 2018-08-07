@@ -8,6 +8,7 @@ import {
 } from 'draft-js';
 import Link from 'react-router-dom';
 import DocumentEditor from './DocumentEditor';
+import StyleToolbar from './StyleToolbar';
 import axios from 'axios';
 import io from 'socket.io-client';
 
@@ -53,14 +54,14 @@ class DocumentContainer extends React.Component {
         );
         this.setState({
           title: response.data.doc.title,
-          editorState: response.data.doc.editorRaw
+          editorState: response.data.doc.contents
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.editorRaw))
+                convertFromRaw(JSON.parse(response.data.doc.contents))
               )
             : this.state.editorState,
           currentSelection: response.data.doc.editorRaw
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.editorRaw))
+                convertFromRaw(JSON.parse(response.data.doc.contents))
               ).getSelection()
             : this.state.currentSelection,
           isLoading: false
@@ -147,19 +148,22 @@ class DocumentContainer extends React.Component {
     }
 
     return (
-      <DocumentEditor
-        props={this.props}
-        loading={this.state.loading}
-        title={this.state.title}
-        docId={this.state.id}
-        currentSelection={this.state.currentSelection}
-        editorState={this.state.editorState}
-        onChangeFn={this.onChange}
-        socket={this.state.socket}
-        setStateFn={this.setStateFunction.bind(this)}
-        exitDoc={this.exitDoc.bind(this)}
-        saveFn={this.saveDocument.bind(this)}
-      />
+      <div>
+        <StyleToolbar />
+        <DocumentEditor
+          props={this.props}
+          loading={this.state.loading}
+          title={this.state.title}
+          docId={this.state.id}
+          currentSelection={this.state.currentSelection}
+          editorState={this.state.editorState}
+          onChangeFn={this.onChange}
+          socket={this.state.socket}
+          setStateFn={this.setStateFunction.bind(this)}
+          exitDoc={this.exitDoc.bind(this)}
+          saveFn={this.saveDocument.bind(this)}
+        />
+      </div>
     );
   }
 }
