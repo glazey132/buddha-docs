@@ -176,54 +176,13 @@ class DocumentEditor extends React.Component {
   //lifecycle methods
   componentDidMount() {
     console.log('compdidmount here is this.props ', this.props);
-    // this.props.socket.on('aftercolor', obj => {
-    //   let selectionState = SelectionState.createEmpty();
-    //   selectionState = selectionState.merge({
-    //     anchorOffset: obj.anchorOffset,
-    //     focusOffset: obj.focusOffset,
-    //     focusKey: obj.focusKey,
-    //     anchorKey: obj.anchorKey,
-    //     isBackward: obj.isBackward
-    //   });
-    //   const originalSelection = this.props.currentSelection;
-    //   this.props.setStateFn(
-    //     EditorState.forceSelection(this.props.editorState, selectionState)
-    //   );
-    //   const coords = window
-    //     .getSelection()
-    //     .getRangeAt(0)
-    //     .getBoundingClientRect();
-    //   this.props.setStateFn(
-    //     EditorState.forceSelection(this.props.editorState, originalSelection)
-    //   );
-    //   if (obj.isCollapsed) {
-    //     this.setState({
-    //       location: {
-    //         top: coords.top,
-    //         bottom: coords.bottom,
-    //         left: coords.left,
-    //         right: coords.right,
-    //         height: coords.height,
-    //         width: coords.height / 16
-    //       },
-    //       color: obj.color,
-    //       display: true
-    //     });
-    //   } else {
-    //     this.setState({
-    //       location: {
-    //         top: coords.top,
-    //         bottom: coords.bottom,
-    //         left: coords.left,
-    //         right: coords.right,
-    //         height: coords.height,
-    //         width: coords.width
-    //       },
-    //       color: obj.color,
-    //       display: true
-    //     });
-    //   }
-    // });
+  }
+
+  componentWillUnmount() {
+    this.socket.emit('documentLeave', {
+      docId: this.state.id,
+      color: this.state.color
+    });
   }
 
   onChange(editorState) {
