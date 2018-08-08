@@ -189,6 +189,32 @@ class DocumentEditor extends React.Component {
     this.setState({
       editorState
     });
+
+    let stringifiedContentState = this.createStringifiedContentStateFromEditorState(
+      editorState
+    );
+
+    this.socket.emit('changeEditorState', {
+      docId: this.state.id,
+      contentState: stringifiedContentState,
+      selectionState: editorState.getSelection(),
+      color: this.state.color,
+      username: 'admin'
+    });
+  }
+
+  createEditorStateFromStringifiedContentState(stringifiedContentState) {
+    let contentState = JSON.parse(stringifiedContentState);
+    contentState = convertFromRaw(contentState);
+    let editorState = EditorState.createWithContent(contentState);
+    return editorState;
+  }
+
+  createStringifiedContentStateFromEditorState(editorState) {
+    let contentState = editorState.getCurrentContent();
+    contentState = convertToRaw(contentState);
+    let stringifiedContentState = JSON.stringify(contentState);
+    return stringifiedContentState;
   }
 
   toggleBlockType(event, blockType) {
