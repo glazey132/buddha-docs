@@ -55,7 +55,8 @@ const customStyleMap = {
   },
   LARGE: {
     fontSize: '20px'
-  }
+  },
+  CODE: { fontFamily: '"Operator Mono", monospace', fontSize: 12 }
 };
 
 export default customStyleMap;
