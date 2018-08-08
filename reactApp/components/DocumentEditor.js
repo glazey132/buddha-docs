@@ -9,6 +9,7 @@ import {
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
+import { Map } from 'immutable';
 import { Row, Col } from 'react-materialize';
 
 //import components
@@ -53,13 +54,19 @@ class DocumentEditor extends React.Component {
       backgroundColor: ''
     };
 
-    // this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
-    //   new Map({
-    //     right: {},
-    //     center: {},
-    //     left: {}
-    //   })
-    // );
+    this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
+      new Map({
+        right: {
+          element: 'div'
+        },
+        center: {
+          element: 'div'
+        },
+        left: {
+          element: 'div'
+        }
+      })
+    );
 
     //axios call to backend to retrieve document
     axios
@@ -178,6 +185,8 @@ class DocumentEditor extends React.Component {
       event.preventDefault();
     }
 
+    console.log('attempting to apply inline style of ==> ', inlineStyle);
+
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
     );
@@ -186,14 +195,14 @@ class DocumentEditor extends React.Component {
   myBlockStyleFn(contentBlock) {
     const type = contentBlock.getType();
     switch (type) {
-      case 'right':
-        return 'right';
-      case 'center':
-        return 'center';
       case 'left':
-        return 'left';
+        return 'align-left';
+      case 'center':
+        return 'align-center';
+      case 'right':
+        return 'align-right';
       default:
-        return 'left';
+        return null;
     }
   }
 
@@ -325,7 +334,7 @@ class DocumentEditor extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="document-editor-page">
         <div className="document-header">
           <button
             name="backbutton"
@@ -354,9 +363,11 @@ class DocumentEditor extends React.Component {
               editorState={this.state.editorState}
               customStyleMap={customStyleMap}
               blockStyleFn={this.myBlockStyleFn}
+              blockRenderMap={this.extendedBlockRenderMap}
               ref="editor"
               onChange={state => this.onChange(state)}
               spellCheck={true}
+              onTab={e => this.onTabKey(e)}
             />
           </div>
         </div>

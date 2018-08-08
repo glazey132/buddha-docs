@@ -46,6 +46,15 @@ const customStyleMap = {
   },
   '#d4c4fb': {
     color: '#d4c4fb'
+  },
+  SMALL: {
+    fontSize: '10px'
+  },
+  NORMAL: {
+    fontSize: '15px'
+  },
+  LARGE: {
+    fontSize: '20px'
   }
 };
 

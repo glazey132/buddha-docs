@@ -11,6 +11,7 @@ import '../../css/Toolbar.css';
 
 //imported components
 import ColorDropdown from './ColorDropdown';
+import FontSizeDropdown from './FontSizeDropdown';
 import StyleButton from './StyleButton';
 
 class StyleToolbar extends React.Component {
@@ -42,6 +43,9 @@ class StyleToolbar extends React.Component {
               onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
             />
           ))}
+          <FontSizeDropdown
+            onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
+          />
           <ColorDropdown
             className="toolbar-button"
             onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
