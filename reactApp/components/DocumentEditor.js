@@ -36,20 +36,9 @@ class DocumentEditor extends React.Component {
       timestamp: '',
       editorState: EditorState.createEmpty(),
       currentSelection: SelectionState.createEmpty(),
-      fontSize: 12,
-      location: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 0,
-        width: 0
-      },
-      display: false,
-      color: 'white',
-      font: '',
-      fontColor: '',
-      backgroundColor: ''
+      otherUses: {},
+      color: '',
+      isLoading: true
     };
 
     this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
@@ -102,6 +91,79 @@ class DocumentEditor extends React.Component {
           error
         );
       });
+
+    this.props.socket.on('updateEditorState', data => {
+      //get new editor state
+      let contentState = JSON.parse(data.contentState);
+      contentState = convertFromRaw(contentState);
+      let editorState = EditorState.push(this.state.editorState, contentState);
+
+      //selection states
+      let currentSelectionState = editorState.getSelection();
+      let otherSelectionState = currentSelectionState.merge(
+        data.selectionState
+      );
+
+      //force other selectionState
+      editorState = EditorState.forceSelection(
+        editorState,
+        otherSelectionState
+      );
+      this.setState({ editorState });
+
+      let startKey = otherSelectionState.getStartKey();
+      let endKey = otherSelectionState.getEndKey();
+      let startOffset = otherSelectionState.getStartOffset();
+      let endOffset = otherSelectionState.getEndOffset();
+
+      const windowSelectionState = window.getSelection();
+      if (windowSelectionState.rangeCount > 0) {
+        const range = windowSelectionState.getRangeAt(0);
+        const clientRects = range.getClientRects();
+        const rects = clientRects[0];
+        let cursorLocation = {
+          top: rects.top,
+          left: rects.left,
+          height: rects.height
+        };
+        let highlights = [];
+        for (let i = 0; i < clientRects.length; i++) {
+          let highlightLocation = {
+            top: clientRects[i].top,
+            bottom: clientRects[i].bottom,
+            left: clientRects[i].left,
+            right: clientRects[i].right,
+            height: clientRects[i].height,
+            width: clientRects[i].width
+          };
+          highlights.push(highlightLocation);
+        }
+        let tempOtherUsers = JSON.parse(JSON.stringify(this.state.otherUsers));
+        tempOtherUsers[data.color] = {
+          username: data.username,
+          color: data.color,
+          cursorLocation,
+          highlights
+        };
+        this.setState({ otherUsers: tempOtherUsers });
+      }
+      editorState = EditorState.forceSelection(
+        editorState,
+        currentSelectionState
+      );
+
+      this.setState({ editorState });
+    });
+
+    this.socket.on('updateName', data => {
+      this.setState({ name: data.name });
+    });
+
+    this.socket.on('userLeave', data => {
+      let tempOtherUsers = JSON.parse(JSON.stringify(this.state.otherUsers));
+      delete tempOtherUsers[data.color];
+      this.setState({ otherUsers: tempOtherUsers });
+    });
   }
 
   // createEditorStateFromStringifiedContentState(stringifedContentState) {
