@@ -19,8 +19,6 @@ import StyleToolbar from './StyleToolbar';
 import customStyleMap from '../assets/customStyleMap';
 import myBlockTypes from '../assets/blockTypes';
 
-import '../../css/DocumentEditor.css';
-
 const axiosConfig = {
   withCredentials: true,
   headers: {
@@ -266,70 +264,6 @@ class DocumentEditor extends React.Component {
   //navigate back button function
   navigateBack() {
     this.props.props.history.goBack();
-  }
-
-  //font select function
-  _onFont(event, index, value) {
-    const fontType = value;
-    console.log(
-      '_onFontFunction functioning ** ---> event ---> ',
-      event,
-      index,
-      value
-    );
-    this.setState({
-      font: value
-    });
-
-    switch (value) {
-      case 'times new roman':
-        this.toggleFormat(event, 'times', true);
-        break;
-      case 'kavivanar':
-        this.toggleFormat(event, 'kavivanar', true);
-        break;
-      case 'crimsontext':
-        this.toggleFormat(event, 'crimsontext', true);
-        break;
-      case 'bungeeinline':
-        this.toggleFormat(event, 'bungeeinline', true);
-        break;
-      default:
-        this.toggleFormat(event, (style: 'times-new-roman'), (block: true));
-      //this.toggleFormat(event, 'times-new-roman', true);
-    }
-  }
-
-  //font size function
-  _onFontSize(event, index, value) {
-    const fontSize = value;
-    console.log('_onFontSize functioning **', event, index, value);
-    this.setState({
-      fontSize: value
-    });
-
-    switch (value) {
-      case 12:
-        this.toggleFormat(event, 'size12', true);
-        break;
-      case 24:
-        this.toggleFormat(event, 'size24', true);
-        break;
-      case 36:
-        this.toggleFormat(event, 'size36', true);
-        break;
-      case 48:
-        this.toggleFormat(event, 'size48', true);
-        break;
-      case 60:
-        this.toggleFormat(event, 'size60', true);
-        break;
-      case 72:
-        this.toggleFormat(event, 'size72', true);
-        break;
-      default:
-        this.toggleFormat(event, 'size12', true);
-    }
   }
 
   render() {

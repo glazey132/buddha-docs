@@ -1,7 +1,6 @@
 //packages
 const React = require('react');
 import { Button } from 'react-materialize';
-import '../../css/StyleButton.css';
 
 class StyleButton extends React.Component {
   constructor(props) {

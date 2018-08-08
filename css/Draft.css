@@ -80,11 +80,11 @@ html {
 
 .editor-container {
   margin: 0 auto;
-  border: 2px solid crimson;
+  border: 2px solid rgb(101, 39, 178);
   overflow-y: scroll;
   padding: 20px;
   background: azure;
-  height: 800px;
+  height: 700px;
   min-width: 400px;
   width: 600px;
 }

@@ -2,7 +2,7 @@
 import React from 'react';
 import { RichUtils, DefaultDraftBlockRenderMap } from 'draft-js';
 import { Map } from 'immutable';
-import { Row, Col, Button, Modal } from 'react-materialize';
+import { Row, Col, Button, Modal, CardPanel } from 'react-materialize';
 
 //style assets
 import INLINE_STYLES from '../assets/inlineStyles';
@@ -26,10 +26,12 @@ class StyleToolbar extends React.Component {
     return (
       <div>
         {this.state.shareOpen ? (
-          <p>
-            Share this id with your friends to collaborate on this document! ID:{' '}
-            {this.props.id}
-          </p>
+          <CardPanel className="teal lighten-4 black-text">
+            <span>
+              Share this id with your friends to collaborate on this document!
+              ID: {this.props.id}
+            </span>
+          </CardPanel>
         ) : null}
         <Row className="toolbar">
           {INLINE_STYLES.map(type => (
