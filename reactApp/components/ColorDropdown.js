@@ -40,7 +40,9 @@ class ColorDropdown extends React.Component {
           open={this.state.colorPickerOpen}
           onRequestClose={() => this.closeColorPicker()}
         >
-          <GithubPicker />
+          <GithubPicker
+            onChangeComplete={color => this.props.onToggle(null, color.hex)}
+          />
         </Popover>
       </div>
     );

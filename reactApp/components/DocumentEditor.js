@@ -3,28 +3,21 @@ import {
   Editor,
   EditorState,
   RichUtils,
+  DefaultDraftBlockRenderMap,
   convertToRaw,
   convertFromRaw,
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
+import { Map } from 'immutable';
 import { Row, Col } from 'react-materialize';
-// import AppBar from 'material-ui/AppBar';
-// import IconButton from 'material-ui/IconButton';
-// import NavigationClose from 'material-ui/svg-icons/navigation/close';
-// import FlatButton from 'material-ui/FlatButton';
-// import FontIcon from 'material-ui/FontIcon';
-// import RaisedButton from 'material-ui/RaisedButton';
-// import SelectField from 'material-ui/SelectField';
-// import MenuItem from 'material-ui/MenuItem';
-// import * as colors from 'material-ui/styles/colors';
 
 //import components
 import StyleToolbar from './StyleToolbar';
 
+//assets
+import customStyleMap from '../assets/customStyleMap';
 import myBlockTypes from '../assets/blockTypes';
-
-import '../../css/DocumentEditor.css';
 
 const axiosConfig = {
   withCredentials: true,
@@ -38,6 +31,11 @@ class DocumentEditor extends React.Component {
     super(props);
     this.state = {
       id: this.props.id,
+      title: '',
+      collaborators: [],
+      timestamp: '',
+      editorState: EditorState.createEmpty(),
+      currentSelection: SelectionState.createEmpty(),
       fontSize: 12,
       location: {
         top: 0,
@@ -49,14 +47,26 @@ class DocumentEditor extends React.Component {
       },
       display: false,
       color: 'white',
-      editorState: EditorState.createEmpty(),
-      currentSelection: SelectionState.createEmpty(),
       font: '',
       fontColor: '',
       backgroundColor: ''
     };
 
-    //axios get doc
+    this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
+      new Map({
+        right: {
+          element: 'div'
+        },
+        center: {
+          element: 'div'
+        },
+        left: {
+          element: 'div'
+        }
+      })
+    );
+
+    //axios call to backend to retrieve document
     axios
       .get(
         localStorage.getItem('url') + '/findDoc/' + this.state.id,
@@ -69,16 +79,16 @@ class DocumentEditor extends React.Component {
         );
         this.setState({
           title: response.data.doc.title,
-          // editorState: response.data.doc.contents
-          //   ? EditorState.createWithContent(
-          //       convertFromRaw(JSON.parse(response.data.doc.contents))
-          //     )
-          //   : this.state.editorState,
-          // currentSelection: response.data.doc.editorRaw
-          //   ? EditorState.createWithContent(
-          //       convertFromRaw(JSON.parse(response.data.doc.contents))
-          //     ).getSelection()
-          //   : this.state.currentSelection,
+          editorState: response.data.doc.contents
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              )
+            : this.state.editorState,
+          currentSelection: response.data.doc.editorRaw
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              ).getSelection()
+            : this.state.currentSelection,
           isLoading: false
         });
         console.log(
@@ -93,6 +103,13 @@ class DocumentEditor extends React.Component {
         );
       });
   }
+
+  // createEditorStateFromStringifiedContentState(stringifedContentState) {
+  //   let contentState = JSON.parse(stringifedContentState)
+  //   contentState = convertFromRaw(contentState);
+  //   let editorState = createWithContent(contentState);
+  //   return editorState;
+  // }
 
   //lifecycle methods
   componentDidMount() {
@@ -153,48 +170,50 @@ class DocumentEditor extends React.Component {
     });
   }
 
-  saveDocument() {
-    axios
-      .post('http://localhost:3000/saveDoc/', {
-        docId: this.state.id,
-        title: this.state.title,
-        editorState: JSON.stringify(
-          convertToRaw(this.state.editorState.getCurrentContent())
-        )
-      })
-      .then(response => {
-        console.log('got response from save: ', response);
-        if (response.data.success) {
-          console.log('saved');
-        } else {
-          console.log('error saving');
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+  toggleBlockType(event, blockType) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
+  }
+
+  toggleInlineStyle(event, inlineStyle) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    console.log('attempting to apply inline style of ==> ', inlineStyle);
+
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
+    );
+  }
+
+  myBlockStyleFn(contentBlock) {
+    const type = contentBlock.getType();
+    switch (type) {
+      case 'left':
+        return 'align-left';
+      case 'center':
+        return 'align-center';
+      case 'right':
+        return 'align-right';
+      default:
+        return null;
+    }
+  }
+
+  onTabKey(event) {
+    console.log('there was a tab event! ', event);
+    event.preventDefault();
+    const maxDepth = 4;
+    this.onChange(RichUtils.onTab(event, this.state.editorState, maxDepth));
   }
 
   exitDoc() {
     this.state.socket.emit('exit');
   }
-
-  //BUTTON JSX AND ASSOCIATED FUNCTIONS
-
-  //toolbar button jsx
-  // formatButton({ icon, style, block }) {
-  //   return (
-  //     <RaisedButton
-  //       backgroundColor={
-  //         this.state.editorState.getCurrentInlineStyle().has(style)
-  //           ? colors.orange800
-  //           : colors.orange200
-  //       }
-  //       onMouseDown={e => this.toggleFormat(e, style, block)}
-  //       icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-  //     />
-  //   );
-  // }
 
   //toolbar button toggle function
   toggleFormat(e, style, block) {
@@ -216,17 +235,6 @@ class DocumentEditor extends React.Component {
     }
   }
 
-  //save button jsx
-  // saveButton() {
-  //   return (
-  //     <RaisedButton
-  //       backgroundColor={colors.orange200}
-  //       onMouseDown={() => this.saveDoc()}
-  //       icon={<FontIcon className="material-icons">beenhere</FontIcon>}
-  //     />
-  //   );
-  // }
-
   //save document to db function
   saveDoc() {
     const rawJson = JSON.stringify(
@@ -239,8 +247,8 @@ class DocumentEditor extends React.Component {
       .post(
         localStorage.getItem('url') + '/saveDoc/',
         {
-          docid: this.props.docId,
-          title: this.props.title,
+          docid: this.state.id,
+          title: this.state.title,
           contents: rawJson
         },
         axiosConfig
@@ -258,137 +266,9 @@ class DocumentEditor extends React.Component {
     this.props.props.history.goBack();
   }
 
-  //font select function
-  _onFont(event, index, value) {
-    const fontType = value;
-    console.log(
-      '_onFontFunction functioning ** ---> event ---> ',
-      event,
-      index,
-      value
-    );
-    this.setState({
-      font: value
-    });
-
-    switch (value) {
-      case 'times new roman':
-        this.toggleFormat(event, 'times', true);
-        break;
-      case 'kavivanar':
-        this.toggleFormat(event, 'kavivanar', true);
-        break;
-      case 'crimsontext':
-        this.toggleFormat(event, 'crimsontext', true);
-        break;
-      case 'bungeeinline':
-        this.toggleFormat(event, 'bungeeinline', true);
-        break;
-      default:
-        this.toggleFormat(event, (style: 'times-new-roman'), (block: true));
-      //this.toggleFormat(event, 'times-new-roman', true);
-    }
-  }
-
-  //font size function
-  _onFontSize(event, index, value) {
-    const fontSize = value;
-    console.log('_onFontSize functioning **', event, index, value);
-    this.setState({
-      fontSize: value
-    });
-
-    switch (value) {
-      case 12:
-        this.toggleFormat(event, 'size12', true);
-        break;
-      case 24:
-        this.toggleFormat(event, 'size24', true);
-        break;
-      case 36:
-        this.toggleFormat(event, 'size36', true);
-        break;
-      case 48:
-        this.toggleFormat(event, 'size48', true);
-        break;
-      case 60:
-        this.toggleFormat(event, 'size60', true);
-        break;
-      case 72:
-        this.toggleFormat(event, 'size72', true);
-        break;
-      default:
-        this.toggleFormat(event, 'size12', true);
-    }
-  }
-
-  //font color function
-  _onFontColor(event, index, value) {
-    const fontColor = value;
-    console.log('_onFontColor functioning **', event, index, value);
-    this.setState({
-      fontColor: value
-    });
-
-    switch (value) {
-      case 'red':
-        this.toggleFormat(event, 'redFont', true);
-        break;
-      case 'orange':
-        this.toggleFormat(event, 'orangeFont', true);
-        break;
-      case 'yellow':
-        this.toggleFormat(event, 'yellowFont', true);
-        break;
-      case 'green':
-        this.toggleFormat(event, 'greenFont', true);
-        break;
-      case 'blue':
-        this.toggleFormat(event, 'blueFont', true);
-        break;
-      case 'purple':
-        this.toggleFormat(event, 'purpleFont', true);
-        break;
-      case 'black':
-        this.toggleFormat(event, 'blackFont', true);
-        break;
-      default:
-        this.toggleFormat(event, 'blackFont', true);
-    }
-  }
-
-  //font background color function
-  _onFontBackgroundColor(event, index, value) {
-    const backgroundColor = value;
-    console.log('_onFontBacgroundColor functioning **', event, index, value);
-    this.setState({
-      backgroundColor: value
-    });
-
-    switch (value) {
-      case 'orange':
-        this.toggleFormat(event, 'orangeBackground', true);
-        break;
-      case 'yellow':
-        this.toggleFormat(event, 'yellowBackground', true);
-        break;
-      case 'green':
-        this.toggleFormat(event, 'greenBackground', true);
-        break;
-      case 'purple':
-        this.toggleFormat(event, 'purpleBackground', true);
-        break;
-      case 'white':
-        this.toggleFormat(event, 'whiteBackground', true);
-        break;
-      default:
-        this.toggleFormat(event, 'whiteBackground', true);
-    }
-  }
-
   render() {
     return (
-      <div>
+      <div className="document-editor-page">
         <div className="document-header">
           <button
             name="backbutton"
@@ -397,22 +277,31 @@ class DocumentEditor extends React.Component {
           >
             Back to Documents
           </button>
-          <h6 className="document-id">
-            Share this ID to Collab: {this.props.docId}
-          </h6>
         </div>
         <div>
           <StyleToolbar
             editorState={this.state.editorState}
             id={this.state.id}
+            onToggleBlockType={(event, style) =>
+              this.toggleBlockType(event, style)
+            }
+            onToggleInlineStyle={(event, style) =>
+              this.toggleInlineStyle(event, style)
+            }
+            onSave={() => this.saveDoc()}
           />
         </div>
         <div className="editor-container">
           <div className="editor-page">
             <Editor
               editorState={this.state.editorState}
+              customStyleMap={customStyleMap}
+              blockStyleFn={this.myBlockStyleFn}
+              blockRenderMap={this.extendedBlockRenderMap}
               ref="editor"
               onChange={state => this.onChange(state)}
+              spellCheck={true}
+              onTab={e => this.onTabKey(e)}
             />
           </div>
         </div>

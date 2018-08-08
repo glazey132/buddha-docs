@@ -10,20 +10,25 @@
 }
 
 .small-input {
-  background-color: red;
   width: 40% !important;
   font-weight: bold;
   color: white;
+  margin: 0.5em !important;
 }
 
 .home-styled-button {
   border: solid black 1px;
-  padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
   border-radius: 10px;
-  height: 3%;
-  background-color: lightgrey;
+  height: 3em;
+  text-align: center;
+  justify-content: center;
+  background-color: #0be2bb;
 }
 
 .title {
-  color: darkorange;
+  color: #f6bb3b;
+  font-family: fantasy;
 }
