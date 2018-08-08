@@ -55,43 +55,6 @@ class DocumentEditor extends React.Component {
       })
     );
 
-    //axios call to backend to retrieve document
-    axios
-      .get(
-        localStorage.getItem('url') + '/findDoc/' + this.state.id,
-        axiosConfig
-      )
-      .then(response => {
-        console.log(
-          'got a document payload on page load. response: ',
-          response.data
-        );
-        this.setState({
-          title: response.data.doc.title,
-          editorState: response.data.doc.contents
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              )
-            : this.state.editorState,
-          currentSelection: response.data.doc.editorRaw
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              ).getSelection()
-            : this.state.currentSelection,
-          isLoading: false
-        });
-        console.log(
-          'the state after pageload payload was applied: ',
-          this.state
-        );
-      })
-      .catch(function(error) {
-        console.log(
-          'There was an error while trying to retrieve the document on page load ',
-          error
-        );
-      });
-
     this.props.socket.on('updateEditorState', data => {
       //get new editor state
       let contentState = JSON.parse(data.contentState);
@@ -155,11 +118,11 @@ class DocumentEditor extends React.Component {
       this.setState({ editorState });
     });
 
-    this.socket.on('updateName', data => {
+    this.props.socket.on('updateName', data => {
       this.setState({ name: data.name });
     });
 
-    this.socket.on('userLeave', data => {
+    this.props.socket.on('userLeave', data => {
       let tempOtherUsers = JSON.parse(JSON.stringify(this.state.otherUsers));
       delete tempOtherUsers[data.color];
       this.setState({ otherUsers: tempOtherUsers });
@@ -176,10 +139,47 @@ class DocumentEditor extends React.Component {
   //lifecycle methods
   componentDidMount() {
     console.log('compdidmount here is this.props ', this.props);
+
+    //axios call to backend to retrieve document
+    axios
+      .get(
+        localStorage.getItem('url') + '/findDoc/' + this.state.id,
+        axiosConfig
+      )
+      .then(response => {
+        console.log(
+          'got a document payload on page load. response: ',
+          response.data
+        );
+        this.setState({
+          title: response.data.doc.title,
+          editorState: response.data.doc.contents
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              )
+            : this.state.editorState,
+          currentSelection: response.data.doc.editorRaw
+            ? EditorState.createWithContent(
+                convertFromRaw(JSON.parse(response.data.doc.contents))
+              ).getSelection()
+            : this.state.currentSelection,
+          isLoading: false
+        });
+
+        this.props.socket.emit('documentJoin', {
+          docId: this.state.id
+        });
+      })
+      .catch(function(error) {
+        console.log(
+          'There was an error while trying to retrieve the document on page load ',
+          error
+        );
+      });
   }
 
-  componentWillUnmount() {
-    this.socket.emit('documentLeave', {
+  async componentWillUnmount() {
+    this.props.socket.emit('documentLeave', {
       docId: this.state.id,
       color: this.state.color
     });
@@ -194,7 +194,7 @@ class DocumentEditor extends React.Component {
       editorState
     );
 
-    this.socket.emit('changeEditorState', {
+    this.props.socket.emit('changeEditorState', {
       docId: this.state.id,
       contentState: stringifiedContentState,
       selectionState: editorState.getSelection(),
