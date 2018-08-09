@@ -297,7 +297,7 @@ class DocumentEditor extends React.Component {
       .then(resp => {
         console.log('~`* Successfully saved doc data *`~', resp);
         this.setState({
-          revisions: [...this.state.revisions, resp.data.doc.revision_history]
+          revisions: resp.data.doc.revision_history
         });
       })
       .catch(error => {
@@ -325,23 +325,27 @@ class DocumentEditor extends React.Component {
         {this.state.revisionsOpen ? (
           <CardPanel className="teal lighten-4 black-text">
             <ul>
-              {this.state.revisions.map((revision, index) => (
-                <li key={index}>
-                  <a
-                    href="#"
-                    onClick={() => {
-                      let editorState = this.createEditorStateFromStringifiedContentState(
-                        revision.contents
-                      );
-                      this.setState({
-                        editorState: editorState
-                      });
-                    }}
-                  >
-                    {revision.timestamp}
-                  </a>
-                </li>
-              ))}
+              {this.state.revisions.map((revision, index) => {
+                const dateInstance = new Date(revision.timestamp);
+                const dateStr = dateInstance.toString().slice(0, 24);
+                return (
+                  <li key={index}>
+                    <a
+                      href="#"
+                      onClick={() => {
+                        let editorState = this.createEditorStateFromStringifiedContentState(
+                          revision.contents
+                        );
+                        this.setState({
+                          editorState: editorState
+                        });
+                      }}
+                    >
+                      {dateStr}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </CardPanel>
         ) : null}
