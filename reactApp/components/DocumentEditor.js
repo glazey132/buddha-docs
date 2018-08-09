@@ -10,7 +10,7 @@ import {
 } from 'draft-js';
 import axios from 'axios';
 import { Map } from 'immutable';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Button, CardPanel } from 'react-materialize';
 
 //import components
 import StyleToolbar from './StyleToolbar';
@@ -34,11 +34,13 @@ class DocumentEditor extends React.Component {
       id: this.props.id,
       title: '',
       collaborators: [],
+      revisions: [],
       editorState: EditorState.createEmpty(),
       currentSelection: SelectionState.createEmpty(),
       otherUsers: {},
       color: '',
-      isLoading: true
+      isLoading: true,
+      revisionsOpen: false
     };
 
     this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
@@ -160,6 +162,7 @@ class DocumentEditor extends React.Component {
       this.setState({
         collaborators: doc.data.doc.collaborators,
         editorState: editorState,
+        revisions: doc.data.doc.revision_history,
         color: '#' + Math.floor(Math.random() * 16777215).toString(16),
         isLoading: false
       });
@@ -281,9 +284,6 @@ class DocumentEditor extends React.Component {
     const rawJson = JSON.stringify(
       convertToRaw(this.state.editorState.getCurrentContent())
     );
-    console.log('CLICKED SAVE DOC ');
-    console.log('this.state after save click ', this.state);
-    console.log('the doc content in raw form ---> ', rawJson);
     axios
       .post(
         localStorage.getItem('url') + '/saveDoc/',
@@ -296,6 +296,9 @@ class DocumentEditor extends React.Component {
       )
       .then(resp => {
         console.log('~`* Successfully saved doc data *`~', resp);
+        this.setState({
+          revisions: [...this.state.revisions, resp.data.doc.revision_history]
+        });
       })
       .catch(error => {
         console.log('Caught error saving doc ', error);
@@ -319,6 +322,29 @@ class DocumentEditor extends React.Component {
             Back to Documents
           </button>
         </div>
+        {this.state.revisionsOpen ? (
+          <CardPanel className="teal lighten-4 black-text">
+            <ul>
+              {this.state.revisions.map((revision, index) => (
+                <li key={index}>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      let editorState = this.createEditorStateFromStringifiedContentState(
+                        revision.contents
+                      );
+                      this.setState({
+                        editorState: editorState
+                      });
+                    }}
+                  >
+                    {revision.timestamp}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </CardPanel>
+        ) : null}
         <div>
           <StyleToolbar
             editorState={this.state.editorState}
@@ -349,6 +375,18 @@ class DocumentEditor extends React.Component {
             />
           </div>
         </div>
+        <Row>
+          <Button
+            onClick={() => {
+              this.setState(prevState => ({
+                revisionsOpen: !prevState.revisionsOpen
+              }));
+              console.log('this.state.revisions ', this.state.revisions);
+            }}
+          >
+            Revisions
+          </Button>
+        </Row>
       </div>
     );
   }
