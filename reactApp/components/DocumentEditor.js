@@ -14,6 +14,7 @@ import { Row, Col } from 'react-materialize';
 
 //import components
 import StyleToolbar from './StyleToolbar';
+import Cursor from './Cursor';
 
 //assets
 import customStyleMap from '../assets/customStyleMap';
@@ -33,10 +34,9 @@ class DocumentEditor extends React.Component {
       id: this.props.id,
       title: '',
       collaborators: [],
-      timestamp: '',
       editorState: EditorState.createEmpty(),
       currentSelection: SelectionState.createEmpty(),
-      otherUses: {},
+      otherUsers: {},
       color: '',
       isLoading: true
     };
@@ -80,8 +80,14 @@ class DocumentEditor extends React.Component {
       let endOffset = otherSelectionState.getEndOffset();
 
       const windowSelectionState = window.getSelection();
+      console.log('the windowSelection ', windowSelectionState);
+      console.log(' \n startkey \n', startKey);
+      console.log(' \n endkey \n', endKey);
+      console.log(' \n startOffset \n', startOffset);
+      console.log(' \n endOffset \n', endOffset);
       if (windowSelectionState.rangeCount > 0) {
         const range = windowSelectionState.getRangeAt(0);
+        console.log('\n the range \n ', range);
         const clientRects = range.getClientRects();
         const rects = clientRects[0];
         let cursorLocation = {
@@ -101,6 +107,15 @@ class DocumentEditor extends React.Component {
           };
           highlights.push(highlightLocation);
         }
+        console.log('this.state.otherUsers ', this.state.otherUsers);
+        console.log(
+          'stringified other users ',
+          JSON.stringify(this.state.otherUsers)
+        );
+        console.log(
+          'stringified then parsed other users ',
+          JSON.parse(JSON.stringify(this.state.otherUsers))
+        );
         let tempOtherUsers = JSON.parse(JSON.stringify(this.state.otherUsers));
         tempOtherUsers[data.color] = {
           username: data.username,
@@ -129,15 +144,8 @@ class DocumentEditor extends React.Component {
     });
   }
 
-  // createEditorStateFromStringifiedContentState(stringifedContentState) {
-  //   let contentState = JSON.parse(stringifedContentState)
-  //   contentState = convertFromRaw(contentState);
-  //   let editorState = createWithContent(contentState);
-  //   return editorState;
-  // }
-
   //lifecycle methods
-  componentDidMount() {
+  componentWillMount() {
     console.log('compdidmount here is this.props ', this.props);
 
     //axios call to backend to retrieve document
@@ -151,18 +159,14 @@ class DocumentEditor extends React.Component {
           'got a document payload on page load. response: ',
           response.data
         );
+        let editorState = this.createEditorStateFromStringifiedContentState(
+          response.data.doc.contents
+        );
         this.setState({
           title: response.data.doc.title,
-          editorState: response.data.doc.contents
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              )
-            : this.state.editorState,
-          currentSelection: response.data.doc.editorRaw
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              ).getSelection()
-            : this.state.currentSelection,
+          collaborators: response.data.doc.collaborators,
+          editorState: editorState,
+          color: '#' + Math.floor(Math.random() * 16777215).toString(16),
           isLoading: false
         });
 
@@ -340,6 +344,9 @@ class DocumentEditor extends React.Component {
         </div>
         <div className="editor-container">
           <div className="editor-page">
+            {Object.keys(this.state.otherUsers).map(user => (
+              <Cursor key={user} user={this.state.otherUsers[user]} />
+            ))}
             <Editor
               editorState={this.state.editorState}
               customStyleMap={customStyleMap}
