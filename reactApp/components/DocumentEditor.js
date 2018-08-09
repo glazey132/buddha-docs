@@ -59,8 +59,9 @@ class DocumentEditor extends React.Component {
 
     this.props.socket.on('updateEditorState', data => {
       //get new editor state
-      let contentState = JSON.parse(data.contentState);
-      contentState = convertFromRaw(contentState);
+      let contentState = createEditorStateFromStringifiedContentState(
+        data.contentState
+      );
       let editorState = EditorState.push(this.state.editorState, contentState);
 
       //selection states
