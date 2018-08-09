@@ -48,12 +48,10 @@ class StyleToolbar extends React.Component {
             onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
           />
           <ColorDropdown
-            className="toolbar-button"
             onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
           />
           {BLOCK_TYPES.map(type => (
             <StyleButton
-              className="toolbar-button"
               active={this.props.editorState
                 .getCurrentInlineStyle()
                 .has(type.style)}
