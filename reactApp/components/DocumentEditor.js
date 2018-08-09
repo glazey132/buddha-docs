@@ -145,41 +145,31 @@ class DocumentEditor extends React.Component {
   }
 
   //lifecycle methods
-  componentWillMount() {
-    console.log('compdidmount here is this.props ', this.props);
-
+  async componentDidMount() {
     //axios call to backend to retrieve document
-    axios
-      .get(
+    try {
+      let doc = await axios.get(
         localStorage.getItem('url') + '/findDoc/' + this.state.id,
         axiosConfig
-      )
-      .then(response => {
-        console.log(
-          'got a document payload on page load. response: ',
-          response.data
-        );
-        let editorState = this.createEditorStateFromStringifiedContentState(
-          response.data.doc.contents
-        );
-        this.setState({
-          title: response.data.doc.title,
-          collaborators: response.data.doc.collaborators,
-          editorState: editorState,
-          color: '#' + Math.floor(Math.random() * 16777215).toString(16),
-          isLoading: false
-        });
-
-        this.props.socket.emit('documentJoin', {
-          docId: this.state.id
-        });
-      })
-      .catch(function(error) {
-        console.log(
-          'There was an error while trying to retrieve the document on page load ',
-          error
-        );
+      );
+      console.log('the doc returned ===> ', doc);
+      let editorState = this.createEditorStateFromStringifiedContentState(
+        doc.data.doc.contents
+      );
+      let title = doc.data.doc.title;
+      this.setState({
+        collaborators: doc.data.doc.collaborators,
+        editorState: editorState,
+        color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+        isLoading: false
       });
+
+      this.props.socket.emit('documentJoin', {
+        docId: this.state.id
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async componentWillUnmount() {

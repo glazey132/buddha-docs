@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Button } from 'react-materialize';
 import '../../css/Home.css';
 
 const axiosConfig = {
@@ -20,6 +21,7 @@ class Home extends React.Component {
       userid: '',
       newDocumentName: '',
       newDocumentPassword: '',
+      addDocId: '',
       loading: true
     };
   }
@@ -41,6 +43,26 @@ class Home extends React.Component {
         newDocumentPassword: ''
       });
     });
+  }
+
+  addDoc() {
+    if (this.state.addDocId === '') return;
+    axios(localStorage.getItem('url') + '/document/add', {
+      method: 'post',
+      data: {
+        docId: this.state.addDocId
+      },
+      withCredentials: true
+    })
+      .then(resp => {
+        this.setState({
+          docs: [...this.state.docs, resp.data.document],
+          addDocId: ''
+        });
+      })
+      .catch(err => {
+        console.log('There was an error while adding document ', err);
+      });
   }
 
   renderDocumentList() {
@@ -119,12 +141,12 @@ class Home extends React.Component {
                 this.setState({ newDocumentPassword: event.target.value });
               }}
             />
-            <button
+            <Button
               className="home-styled-button"
               onClick={() => this.newDoc()}
             >
-              Create Document
-            </button>
+              New Doc
+            </Button>
           </div>
           <div className="document-container">
             <div className="document-list">
@@ -139,8 +161,15 @@ class Home extends React.Component {
               type="text"
               placeholder="paste a docID to collab on a doc"
               ref="sharedDoc"
+              value={this.state.addDocId}
+              onChange={e => this.setState({ addDocId: e.target.value })}
             />
-            <button className="home-styled-button">Add Shared Doc</button>
+            <Button
+              className="home-styled-button"
+              onClick={() => this.addDoc()}
+            >
+              Add Shared Doc
+            </Button>
           </div>
         </div>
       );
