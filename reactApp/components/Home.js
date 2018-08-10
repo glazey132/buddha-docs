@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Row, Col, Preloader } from 'react-materialize';
-import '../../css/Home.css';
 
 const axiosConfig = {
   withCredentials: true,
