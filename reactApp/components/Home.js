@@ -74,8 +74,9 @@ class Home extends React.Component {
 
   logout() {
     axios
-      .post('http://localhost:3000/logout')
+      .get(localStorage.getItem('url') + '/logout')
       .then(resp => {
+        localStorage.setItem('user', null);
         this.props.history.replace('/');
       })
       .catch(error => console.log(error));

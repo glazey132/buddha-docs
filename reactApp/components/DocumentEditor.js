@@ -15,7 +15,6 @@ import { Row, Col, Button, CardPanel } from 'react-materialize';
 
 //import components
 import StyleToolbar from './StyleToolbar';
-import Cursor from './Cursor';
 
 //assets
 import customStyleMap from '../assets/customStyleMap';
