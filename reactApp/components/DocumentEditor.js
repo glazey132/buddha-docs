@@ -9,11 +9,13 @@ import {
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
+import _ from 'underscore';
 import { Map } from 'immutable';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Button, CardPanel } from 'react-materialize';
 
 //import components
 import StyleToolbar from './StyleToolbar';
+import Cursor from './Cursor';
 
 //assets
 import customStyleMap from '../assets/customStyleMap';
@@ -33,141 +35,118 @@ class DocumentEditor extends React.Component {
       id: this.props.id,
       title: '',
       collaborators: [],
-      timestamp: '',
+      revisions: [],
       editorState: EditorState.createEmpty(),
       currentSelection: SelectionState.createEmpty(),
-      fontSize: 12,
-      location: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 0,
-        width: 0
-      },
-      display: false,
-      color: 'white',
-      font: '',
-      fontColor: '',
-      backgroundColor: ''
+      collabObj: {},
+      color: '',
+      isLoading: true,
+      revisionsOpen: false
     };
 
-    this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
-      new Map({
-        right: {
-          element: 'div'
-        },
-        center: {
-          element: 'div'
-        },
-        left: {
-          element: 'div'
-        }
-      })
-    );
+    this.focus = () => this.domEditor.focus();
+    this.setDomEditorRef = ref => (this.domEditor = ref);
 
-    //axios call to backend to retrieve document
-    axios
-      .get(
-        localStorage.getItem('url') + '/findDoc/' + this.state.id,
-        axiosConfig
-      )
-      .then(response => {
-        console.log(
-          'got a document payload on page load. response: ',
-          response.data
-        );
-        this.setState({
-          title: response.data.doc.title,
-          editorState: response.data.doc.contents
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              )
-            : this.state.editorState,
-          currentSelection: response.data.doc.editorRaw
-            ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(response.data.doc.contents))
-              ).getSelection()
-            : this.state.currentSelection,
-          isLoading: false
-        });
-        console.log(
-          'the state after pageload payload was applied: ',
-          this.state
-        );
-      })
-      .catch(function(error) {
-        console.log(
-          'There was an error while trying to retrieve the document on page load ',
-          error
-        );
+    this.props.socket.on('changeEditorState', data => {
+      const newUserObj = Object.assign({}, this.state.collabObj);
+      newUserObj[data.socketId] = data.userObj[data.socketId];
+      console.log(
+        'new User obj on changeEditor state in client side ',
+        newUserObj
+      );
+      this.setState({ collabObj: newUserObj });
+      let newEditorState = this.createEditorStateFromStringifiedContentState(
+        data.contentState
+      );
+      this.setState({
+        editorState: EditorState.forceSelection(
+          newEditorState,
+          this.state.editorState.getSelection()
+        )
       });
+    });
   }
 
-  // createEditorStateFromStringifiedContentState(stringifedContentState) {
-  //   let contentState = JSON.parse(stringifedContentState)
-  //   contentState = convertFromRaw(contentState);
-  //   let editorState = createWithContent(contentState);
-  //   return editorState;
-  // }
-
   //lifecycle methods
-  componentDidMount() {
-    console.log('compdidmount here is this.props ', this.props);
-    // this.props.socket.on('aftercolor', obj => {
-    //   let selectionState = SelectionState.createEmpty();
-    //   selectionState = selectionState.merge({
-    //     anchorOffset: obj.anchorOffset,
-    //     focusOffset: obj.focusOffset,
-    //     focusKey: obj.focusKey,
-    //     anchorKey: obj.anchorKey,
-    //     isBackward: obj.isBackward
-    //   });
-    //   const originalSelection = this.props.currentSelection;
-    //   this.props.setStateFn(
-    //     EditorState.forceSelection(this.props.editorState, selectionState)
-    //   );
-    //   const coords = window
-    //     .getSelection()
-    //     .getRangeAt(0)
-    //     .getBoundingClientRect();
-    //   this.props.setStateFn(
-    //     EditorState.forceSelection(this.props.editorState, originalSelection)
-    //   );
-    //   if (obj.isCollapsed) {
-    //     this.setState({
-    //       location: {
-    //         top: coords.top,
-    //         bottom: coords.bottom,
-    //         left: coords.left,
-    //         right: coords.right,
-    //         height: coords.height,
-    //         width: coords.height / 16
-    //       },
-    //       color: obj.color,
-    //       display: true
-    //     });
-    //   } else {
-    //     this.setState({
-    //       location: {
-    //         top: coords.top,
-    //         bottom: coords.bottom,
-    //         left: coords.left,
-    //         right: coords.right,
-    //         height: coords.height,
-    //         width: coords.width
-    //       },
-    //       color: obj.color,
-    //       display: true
-    //     });
-    //   }
-    // });
+  async componentDidMount() {
+    this.domEditor.focus();
+    //axios call to backend to retrieve document
+    try {
+      let doc = await axios.get(
+        localStorage.getItem('url') + '/findDoc/' + this.state.id,
+        axiosConfig
+      );
+      console.log('the doc returned ===> ', doc);
+      let editorState = this.createEditorStateFromStringifiedContentState(
+        doc.data.doc.contents
+      );
+      let title = doc.data.doc.title;
+      this.setState({
+        collaborators: doc.data.doc.collaborators,
+        editorState: editorState,
+        revisions: doc.data.doc.revision_history,
+        color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+        isLoading: false
+      });
+
+      this.props.socket.emit('documentJoin', {
+        docId: this.state.id
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async componentWillUnmount() {
+    this.props.socket.emit('documentLeave', {
+      docId: this.state.id,
+      color: this.state.color
+    });
   }
 
   onChange(editorState) {
     this.setState({
       editorState
     });
+
+    let data;
+    const windowSelection = window.getSelection();
+    if (windowSelection.rangeCount > 0) {
+      const range = windowSelection.getRangeAt(0);
+      const clientRects = range.getClientRects();
+      if (clientRects.length > 0) {
+        console.log('client reacts ', clientRects);
+        const rects = clientRects[0];
+        console.log('rects ', rects);
+        const loc = { top: rects.top, left: rects.left, right: rects.right };
+        data = { loc };
+      }
+    }
+
+    let stringifiedContentState = this.createStringifiedContentStateFromEditorState(
+      editorState
+    );
+
+    this.props.socket.emit('changeEditorState', {
+      room: this.state.id,
+      contentState: stringifiedContentState,
+      socketId: this.props.socket.id,
+      data
+    });
+  }
+
+  createEditorStateFromStringifiedContentState(stringifiedContentState) {
+    let contentState = JSON.parse(stringifiedContentState);
+    contentState = convertFromRaw(contentState);
+    let editorState = EditorState.createWithContent(contentState);
+    return editorState;
+  }
+
+  createStringifiedContentStateFromEditorState(editorState) {
+    let contentState = editorState.getCurrentContent();
+    contentState = convertToRaw(contentState);
+    let stringifiedContentState = JSON.stringify(contentState);
+    return stringifiedContentState;
   }
 
   toggleBlockType(event, blockType) {
@@ -240,9 +219,6 @@ class DocumentEditor extends React.Component {
     const rawJson = JSON.stringify(
       convertToRaw(this.state.editorState.getCurrentContent())
     );
-    console.log('CLICKED SAVE DOC ');
-    console.log('this.state after save click ', this.state);
-    console.log('the doc content in raw form ---> ', rawJson);
     axios
       .post(
         localStorage.getItem('url') + '/saveDoc/',
@@ -255,6 +231,9 @@ class DocumentEditor extends React.Component {
       )
       .then(resp => {
         console.log('~`* Successfully saved doc data *`~', resp);
+        this.setState({
+          revisions: resp.data.doc.revision_history
+        });
       })
       .catch(error => {
         console.log('Caught error saving doc ', error);
@@ -279,6 +258,76 @@ class DocumentEditor extends React.Component {
           </button>
         </div>
         <div>
+          {_.map(this.state.collabObj, (val, key) => {
+            console.log('val', val);
+            if (val) {
+              if (val.hasOwnProperty('top')) {
+                if (val.left !== val.right) {
+                  return (
+                    <div
+                      key={val.color}
+                      style={{
+                        position: 'absolute',
+                        opacity: 0.2,
+                        zIndex: 0,
+                        backgroundColor: val.color,
+                        width: Math.abs(val.left - val.right) + 'px',
+                        height: '15px',
+                        top: val.top + 5,
+                        left: val.left - 50
+                      }}
+                    />
+                  );
+                }
+                return (
+                  <div
+                    key={val.color}
+                    style={{
+                      position: 'absolute',
+                      backgroundColor: val.color,
+                      width: '2px',
+                      height: '15px',
+                      top: val.top,
+                      left: val.left
+                    }}
+                  />
+                );
+              } else {
+                return <div key={key} />;
+              }
+            }
+            return <div key={key} />;
+          })}
+          {this.state.revisionsOpen ? (
+            <CardPanel className="teal lighten-4 black-text">
+              <ul style={{ display: 'flex' }}>
+                {this.state.revisions.map((revision, index) => {
+                  const dateInstance = new Date(revision.timestamp);
+                  const dateStr = dateInstance.toString().slice(0, 24);
+                  return (
+                    <li key={index} style={{ flex: 1, margin: '1em' }}>
+                      <a
+                        style={{ color: 'darkslategray' }}
+                        href="#"
+                        onClick={() => {
+                          let editorState = this.createEditorStateFromStringifiedContentState(
+                            revision.contents
+                          );
+                          this.setState({
+                            editorState: editorState
+                          });
+                        }}
+                      >
+                        {dateStr}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </CardPanel>
+          ) : null}
+        </div>
+        <div>
           <StyleToolbar
             editorState={this.state.editorState}
             id={this.state.id}
@@ -297,14 +346,25 @@ class DocumentEditor extends React.Component {
               editorState={this.state.editorState}
               customStyleMap={customStyleMap}
               blockStyleFn={this.myBlockStyleFn}
-              blockRenderMap={this.extendedBlockRenderMap}
-              ref="editor"
+              ref={this.setDomEditorRef}
               onChange={state => this.onChange(state)}
               spellCheck={true}
               onTab={e => this.onTabKey(e)}
             />
           </div>
         </div>
+        <Row>
+          <Button
+            onClick={() => {
+              this.setState(prevState => ({
+                revisionsOpen: !prevState.revisionsOpen
+              }));
+              console.log('this.state.revisions ', this.state.revisions);
+            }}
+          >
+            Revisions
+          </Button>
+        </Row>
       </div>
     );
   }

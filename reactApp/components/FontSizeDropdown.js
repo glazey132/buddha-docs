@@ -44,10 +44,7 @@ class FontSizeDropdown extends React.Component {
   render() {
     return (
       <div>
-        <Button
-          icon="format_color_text"
-          onClick={e => this.openSizePicker(e)}
-        />
+        <Button icon="swap_vert" onClick={e => this.openSizePicker(e)} />
         <Popover
           anchorEl={this.state.sizePickerAnchor}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}

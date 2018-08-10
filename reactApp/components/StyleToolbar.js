@@ -7,7 +7,6 @@ import { Row, Col, Button, Modal, CardPanel } from 'react-materialize';
 //style assets
 import INLINE_STYLES from '../assets/inlineStyles';
 import BLOCK_TYPES from '../assets/blockTypes';
-import '../../css/Toolbar.css';
 
 //imported components
 import ColorDropdown from './ColorDropdown';
@@ -33,7 +32,7 @@ class StyleToolbar extends React.Component {
             </span>
           </CardPanel>
         ) : null}
-        <Row className="toolbar">
+        <Row style={{ display: 'flex', justifyContent: 'center' }}>
           {INLINE_STYLES.map(type => (
             <StyleButton
               active={this.props.editorState
@@ -49,12 +48,10 @@ class StyleToolbar extends React.Component {
             onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
           />
           <ColorDropdown
-            className="toolbar-button"
             onToggle={(e, style) => this.props.onToggleInlineStyle(e, style)}
           />
           {BLOCK_TYPES.map(type => (
             <StyleButton
-              className="toolbar-button"
               active={this.props.editorState
                 .getCurrentInlineStyle()
                 .has(type.style)}
@@ -65,7 +62,7 @@ class StyleToolbar extends React.Component {
             />
           ))}
         </Row>
-        <Row className="toolbar">
+        <Row style={{ display: 'flex', justifyContent: 'center' }}>
           <StyleButton
             key={'save'}
             icon={'save'}
