@@ -9,6 +9,7 @@ import {
   SelectionState
 } from 'draft-js';
 import axios from 'axios';
+import _ from 'underscore';
 import { Map } from 'immutable';
 import { Row, Col, Button, CardPanel } from 'react-materialize';
 
@@ -37,118 +38,38 @@ class DocumentEditor extends React.Component {
       revisions: [],
       editorState: EditorState.createEmpty(),
       currentSelection: SelectionState.createEmpty(),
-      otherUsers: {},
+      collabObj: {},
       color: '',
       isLoading: true,
       revisionsOpen: false
     };
 
-    this.extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(
-      new Map({
-        right: {
-          element: 'div'
-        },
-        center: {
-          element: 'div'
-        },
-        left: {
-          element: 'div'
-        }
-      })
-    );
+    this.focus = () => this.domEditor.focus();
+    this.setDomEditorRef = ref => (this.domEditor = ref);
 
-    this.props.socket.on('updateEditorState', data => {
-      //get new editor state
-      let contentState = createEditorStateFromStringifiedContentState(
+    this.props.socket.on('changeEditorState', data => {
+      const newUserObj = Object.assign({}, this.state.collabObj);
+      newUserObj[data.socketId] = data.userObj[data.socketId];
+      console.log(
+        'new User obj on changeEditor state in client side ',
+        newUserObj
+      );
+      this.setState({ collabObj: newUserObj });
+      let newEditorState = this.createEditorStateFromStringifiedContentState(
         data.contentState
       );
-      let editorState = EditorState.push(this.state.editorState, contentState);
-
-      //selection states
-      let currentSelectionState = editorState.getSelection();
-      let otherSelectionState = currentSelectionState.merge(
-        data.selectionState
-      );
-
-      //force other selectionState
-      editorState = EditorState.forceSelection(
-        editorState,
-        otherSelectionState
-      );
-      this.setState({ editorState });
-
-      let startKey = otherSelectionState.getStartKey();
-      let endKey = otherSelectionState.getEndKey();
-      let startOffset = otherSelectionState.getStartOffset();
-      let endOffset = otherSelectionState.getEndOffset();
-
-      const windowSelectionState = window.getSelection();
-      console.log('the windowSelection ', windowSelectionState);
-      console.log(' \n startkey \n', startKey);
-      console.log(' \n endkey \n', endKey);
-      console.log(' \n startOffset \n', startOffset);
-      console.log(' \n endOffset \n', endOffset);
-      if (windowSelectionState.rangeCount > 0) {
-        const range = windowSelectionState.getRangeAt(0);
-        console.log('\n the range \n ', range);
-        const clientRects = range.getClientRects();
-        const rects = clientRects[0];
-        let cursorLocation = {
-          top: rects.top,
-          left: rects.left,
-          height: rects.height
-        };
-        let highlights = [];
-        for (let i = 0; i < clientRects.length; i++) {
-          let highlightLocation = {
-            top: clientRects[i].top,
-            bottom: clientRects[i].bottom,
-            left: clientRects[i].left,
-            right: clientRects[i].right,
-            height: clientRects[i].height,
-            width: clientRects[i].width
-          };
-          highlights.push(highlightLocation);
-        }
-        console.log('this.state.otherUsers ', this.state.otherUsers);
-        console.log(
-          'stringified other users ',
-          JSON.stringify(this.state.otherUsers)
-        );
-        console.log(
-          'stringified then parsed other users ',
-          JSON.parse(JSON.stringify(this.state.otherUsers))
-        );
-        let tempOtherUsers = JSON.parse(JSON.stringify(this.state.otherUsers));
-        tempOtherUsers[data.color] = {
-          username: data.username,
-          color: data.color,
-          cursorLocation,
-          highlights
-        };
-        this.setState({ otherUsers: tempOtherUsers });
-      }
-      editorState = EditorState.forceSelection(
-        editorState,
-        currentSelectionState
-      );
-
-      this.setState({ editorState });
-    });
-
-    this.props.socket.on('updateName', data => {
-      this.setState({ name: data.name });
-    });
-
-    this.props.socket.on('userLeave', data => {
-      let tempOtherUsers = JSON.parse(JSON.stringify(this.state.otherUsers));
-      delete tempOtherUsers[data.color];
-      this.setState({ otherUsers: tempOtherUsers });
+      this.setState({
+        editorState: EditorState.forceSelection(
+          newEditorState,
+          this.state.editorState.getSelection()
+        )
+      });
     });
   }
 
   //lifecycle methods
   async componentDidMount() {
+    this.domEditor.focus();
     //axios call to backend to retrieve document
     try {
       let doc = await axios.get(
@@ -188,16 +109,29 @@ class DocumentEditor extends React.Component {
       editorState
     });
 
+    let data;
+    const windowSelection = window.getSelection();
+    if (windowSelection.rangeCount > 0) {
+      const range = windowSelection.getRangeAt(0);
+      const clientRects = range.getClientRects();
+      if (clientRects.length > 0) {
+        console.log('client reacts ', clientRects);
+        const rects = clientRects[0];
+        console.log('rects ', rects);
+        const loc = { top: rects.top, left: rects.left, right: rects.right };
+        data = { loc };
+      }
+    }
+
     let stringifiedContentState = this.createStringifiedContentStateFromEditorState(
       editorState
     );
 
     this.props.socket.emit('changeEditorState', {
-      docId: this.state.id,
+      room: this.state.id,
       contentState: stringifiedContentState,
-      selectionState: editorState.getSelection(),
-      color: this.state.color,
-      username: 'admin'
+      socketId: this.props.socket.id,
+      data
     });
   }
 
@@ -323,33 +257,75 @@ class DocumentEditor extends React.Component {
             Back to Documents
           </button>
         </div>
-        {this.state.revisionsOpen ? (
-          <CardPanel className="teal lighten-4 black-text">
-            <ul>
-              {this.state.revisions.map((revision, index) => {
-                const dateInstance = new Date(revision.timestamp);
-                const dateStr = dateInstance.toString().slice(0, 24);
-                return (
-                  <li key={index}>
-                    <a
-                      href="#"
-                      onClick={() => {
-                        let editorState = this.createEditorStateFromStringifiedContentState(
-                          revision.contents
-                        );
-                        this.setState({
-                          editorState: editorState
-                        });
+        <div>
+          {_.map(this.state.collabObj, (val, key) => {
+            console.log('val', val);
+            if (val) {
+              if (val.hasOwnProperty('top')) {
+                if (val.left !== val.right) {
+                  return (
+                    <div
+                      key={val.color}
+                      style={{
+                        position: 'absolute',
+                        opacity: 0.2,
+                        zIndex: 0,
+                        backgroundColor: val.color,
+                        width: Math.abs(val.left - val.right) + 'px',
+                        height: '15px',
+                        top: val.top + 5,
+                        left: val.left - 50
                       }}
-                    >
-                      {dateStr}
-                    </a>
-                  </li>
+                    />
+                  );
+                }
+                return (
+                  <div
+                    key={val.color}
+                    style={{
+                      position: 'absolute',
+                      backgroundColor: val.color,
+                      width: '2px',
+                      height: '15px',
+                      top: val.top,
+                      left: val.left
+                    }}
+                  />
                 );
-              })}
-            </ul>
-          </CardPanel>
-        ) : null}
+              } else {
+                return <div key={key} />;
+              }
+            }
+            return <div key={key} />;
+          })}
+          {this.state.revisionsOpen ? (
+            <CardPanel className="teal lighten-4 black-text">
+              <ul>
+                {this.state.revisions.map((revision, index) => {
+                  const dateInstance = new Date(revision.timestamp);
+                  const dateStr = dateInstance.toString().slice(0, 24);
+                  return (
+                    <li key={index}>
+                      <a
+                        href="#"
+                        onClick={() => {
+                          let editorState = this.createEditorStateFromStringifiedContentState(
+                            revision.contents
+                          );
+                          this.setState({
+                            editorState: editorState
+                          });
+                        }}
+                      >
+                        {dateStr}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </CardPanel>
+          ) : null}
+        </div>
         <div>
           <StyleToolbar
             editorState={this.state.editorState}
@@ -365,15 +341,11 @@ class DocumentEditor extends React.Component {
         </div>
         <div className="editor-container">
           <div className="editor-page">
-            {Object.keys(this.state.otherUsers).map(user => (
-              <Cursor key={user} user={this.state.otherUsers[user]} />
-            ))}
             <Editor
               editorState={this.state.editorState}
               customStyleMap={customStyleMap}
               blockStyleFn={this.myBlockStyleFn}
-              blockRenderMap={this.extendedBlockRenderMap}
-              ref="editor"
+              ref={this.setDomEditorRef}
               onChange={state => this.onChange(state)}
               spellCheck={true}
               onTab={e => this.onTabKey(e)}

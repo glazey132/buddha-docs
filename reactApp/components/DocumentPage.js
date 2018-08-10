@@ -18,7 +18,7 @@ class DocumentPage extends React.Component {
     //socket stuff
     this.state.socket.on('connect', () => {
       console.log('connected to web sockets!');
-      this.state.socket.emit('join', this.state.id);
+      this.state.socket.emit('connection', this.state.id);
     });
   }
 
