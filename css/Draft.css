@@ -1,6 +1,7 @@
 body,
 html {
   font-family: fantasy;
+  height: 100%;
 }
 
 .document-container {
@@ -12,6 +13,7 @@ html {
   overflow-y: scroll;
   text-align: left;
   background: azure;
+  height: 100%;
 }
 
 .document-list {

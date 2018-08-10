@@ -300,13 +300,14 @@ class DocumentEditor extends React.Component {
           })}
           {this.state.revisionsOpen ? (
             <CardPanel className="teal lighten-4 black-text">
-              <ul>
+              <ul style={{ display: 'flex' }}>
                 {this.state.revisions.map((revision, index) => {
                   const dateInstance = new Date(revision.timestamp);
                   const dateStr = dateInstance.toString().slice(0, 24);
                   return (
-                    <li key={index}>
+                    <li key={index} style={{ flex: 1, margin: '1em' }}>
                       <a
+                        style={{ color: 'darkslategray' }}
                         href="#"
                         onClick={() => {
                           let editorState = this.createEditorStateFromStringifiedContentState(
