@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-materialize';
+import { Button, Row, Col, Preloader } from 'react-materialize';
 import '../../css/Home.css';
 
 const axiosConfig = {
@@ -107,8 +107,18 @@ class Home extends React.Component {
   render() {
     if (this.state.loading) {
       return (
-        <div>
-          <h2>Loading...</h2>
+        <div className="color-overlay">
+          <Row
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '47%'
+            }}
+          >
+            <Col s={4}>
+              <Preloader flashing />
+            </Col>
+          </Row>
         </div>
       );
     } else {
