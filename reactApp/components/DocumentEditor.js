@@ -273,8 +273,8 @@ class DocumentEditor extends React.Component {
                         backgroundColor: val.color,
                         width: Math.abs(val.left - val.right) + 'px',
                         height: '15px',
-                        top: val.top + 5,
-                        left: val.left - 50
+                        top: val.top - 70,
+                        left: val.left + 130
                       }}
                     />
                   );
