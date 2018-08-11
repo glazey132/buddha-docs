@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Row, Input, Icon } from 'react-materialize';
-import '../../css/Login.css';
 
 /*
 ** necessary to make req.user available on server side

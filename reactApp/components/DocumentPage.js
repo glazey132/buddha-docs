@@ -1,7 +1,6 @@
 import React from 'react';
 import DocumentEditor from './DocumentEditor';
 import io from 'socket.io-client';
-import '../../css/DocumentPage.css';
 class DocumentPage extends React.Component {
   constructor(props) {
     super(props);
