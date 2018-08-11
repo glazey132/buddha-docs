@@ -15,7 +15,6 @@ import { Row, Col, Button, CardPanel } from 'react-materialize';
 
 //import components
 import StyleToolbar from './StyleToolbar';
-import Cursor from './Cursor';
 
 //assets
 import customStyleMap from '../assets/customStyleMap';
@@ -76,7 +75,6 @@ class DocumentEditor extends React.Component {
         localStorage.getItem('url') + '/findDoc/' + this.state.id,
         axiosConfig
       );
-      console.log('the doc returned ===> ', doc);
       let editorState = this.createEditorStateFromStringifiedContentState(
         doc.data.doc.contents
       );
@@ -115,8 +113,7 @@ class DocumentEditor extends React.Component {
       const range = windowSelection.getRangeAt(0);
       const clientRects = range.getClientRects();
       if (clientRects.length > 0) {
-        console.log('client reacts ', clientRects);
-        const rects = clientRects[0];
+        const rects = clientRects[0]; //clientRects is always an array with a single object inside. so we grab by getting first element of clientRects
         console.log('rects ', rects);
         const loc = { top: rects.top, left: rects.left, right: rects.right };
         data = { loc };
@@ -162,8 +159,6 @@ class DocumentEditor extends React.Component {
       event.preventDefault();
     }
 
-    console.log('attempting to apply inline style of ==> ', inlineStyle);
-
     this.onChange(
       RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
     );
@@ -184,7 +179,6 @@ class DocumentEditor extends React.Component {
   }
 
   onTabKey(event) {
-    console.log('there was a tab event! ', event);
     event.preventDefault();
     const maxDepth = 4;
     this.onChange(RichUtils.onTab(event, this.state.editorState, maxDepth));
@@ -196,12 +190,6 @@ class DocumentEditor extends React.Component {
 
   //toolbar button toggle function
   toggleFormat(e, style, block) {
-    console.log(
-      'in toggle format after font change and here is event style and block ',
-      e,
-      style,
-      block
-    );
     e.preventDefault();
     if (block) {
       this.setState({
@@ -230,7 +218,6 @@ class DocumentEditor extends React.Component {
         axiosConfig
       )
       .then(resp => {
-        console.log('~`* Successfully saved doc data *`~', resp);
         this.setState({
           revisions: resp.data.doc.revision_history
         });
@@ -270,11 +257,11 @@ class DocumentEditor extends React.Component {
                         position: 'absolute',
                         opacity: 0.2,
                         zIndex: 0,
-                        backgroundColor: val.color,
+                        backgroundColor: 'yellow',
                         width: Math.abs(val.left - val.right) + 'px',
                         height: '15px',
-                        top: val.top + 5,
-                        left: val.left - 50
+                        top: val.top - 68,
+                        left: val.left - 70
                       }}
                     />
                   );
@@ -284,10 +271,10 @@ class DocumentEditor extends React.Component {
                     key={val.color}
                     style={{
                       position: 'absolute',
-                      backgroundColor: val.color,
+                      backgroundColor: 'red',
                       width: '2px',
                       height: '15px',
-                      top: val.top,
+                      top: val.top - 7,
                       left: val.left
                     }}
                   />
@@ -306,7 +293,7 @@ class DocumentEditor extends React.Component {
                   const dateStr = dateInstance.toString().slice(0, 24);
                   return (
                     <li key={index} style={{ flex: 1, margin: '1em' }}>
-                      <a
+                      <p
                         style={{ color: 'darkslategray' }}
                         href="#"
                         onClick={() => {
@@ -319,7 +306,7 @@ class DocumentEditor extends React.Component {
                         }}
                       >
                         {dateStr}
-                      </a>
+                      </p>
                     </li>
                   );
                 })}
@@ -359,7 +346,6 @@ class DocumentEditor extends React.Component {
               this.setState(prevState => ({
                 revisionsOpen: !prevState.revisionsOpen
               }));
-              console.log('this.state.revisions ', this.state.revisions);
             }}
           >
             Revisions

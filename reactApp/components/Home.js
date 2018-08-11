@@ -1,8 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-materialize';
-import '../../css/Home.css';
+import { Button, Row, Col, Preloader } from 'react-materialize';
 
 const axiosConfig = {
   withCredentials: true,
@@ -75,8 +74,9 @@ class Home extends React.Component {
 
   logout() {
     axios
-      .post('http://localhost:3000/logout')
+      .get(localStorage.getItem('url') + '/logout')
       .then(resp => {
+        localStorage.setItem('user', null);
         this.props.history.replace('/');
       })
       .catch(error => console.log(error));
@@ -107,8 +107,18 @@ class Home extends React.Component {
   render() {
     if (this.state.loading) {
       return (
-        <div>
-          <h2>Loading...</h2>
+        <div className="color-overlay">
+          <Row
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '47%'
+            }}
+          >
+            <Col s={4}>
+              <Preloader flashing />
+            </Col>
+          </Row>
         </div>
       );
     } else {
