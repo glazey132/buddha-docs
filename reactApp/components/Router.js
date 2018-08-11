@@ -12,7 +12,7 @@ class Router extends React.Component {
 
   render() {
     //buddha-docs-server.herokuapp.com
-    localStorage.setItem('url', 'http://localhost:3000');
+    localStorage.setItem('url', 'https://buddha-docs-server.herokuapp.com');
     return (
       <div>
         <Route path={'/'} exact component={Login} />
