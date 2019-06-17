@@ -3,6 +3,12 @@
 A rich text editor built built with calming aesthetics and collaboration in mind.
 ![home](gifs/home_gif.gif)
 
+## To Run
+- must have node installed
+- git clone this repo
+- in your terminal run `npm install` to download electron and other needed packages
+- after the packages are finished installing, in your terminal, run `npm run devFront`. You may need to reload your new electron window after the code is finished compiling. Register as a user, login and have fun.
+
 ## Tech
 - collaborative editing enabled by real-time communication with **SocketIO**
 - rich-text editor styling compliments of Facebook's **DraftJS** and it's use of **contentEditable**s
@@ -19,3 +25,6 @@ A rich text editor built built with calming aesthetics and collaboration in mind
 ![collab](gifs/collab.gif)
 
 ### [check out the backend](https://github.com/glazey132/buddha-docs-backend)
+
+### Bugs
+There are a few known bugs. I will eventually get around to fixing them. Feel free to document or fix any issues you find.
